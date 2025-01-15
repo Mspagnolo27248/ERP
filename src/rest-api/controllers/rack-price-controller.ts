@@ -6,6 +6,7 @@ import { PricingRepository } from "../../core-layer/pricing-module/data-access-r
 import { GetRackPricingUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPricingUseCase";
 import { GetRackPriceByKeyUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPriceByKeyUseCase";
 import { DeleteRackPriceUseCase } from "../../core-layer/pricing-module/use-cases/DeleteRackPriceUseCase";
+import { handleError } from "../utility/error-handler";
 
 const pricingRepository: PricingRepository = new PricingRepositoryImp();
 
@@ -37,12 +38,7 @@ export class RackPriceController {
       const rackPrice = await usecase.execute(keys);
       return res.status(201).json(rackPrice);
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ message: error.message });
-      } else {
-        console.error("An unknown error occurred");
-      }
-      return res.status(500).json({ message: "Error" });
+      handleError(res,error);
     }
   }
 

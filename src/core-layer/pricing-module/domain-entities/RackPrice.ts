@@ -50,9 +50,7 @@ export class RackPrice extends Entity {
         this.inactiveFlag = rackPriceDto.inactiveFlag;
 
         this.validateUnitOfMeasure();
-    }
-
-     // Validate UOM upon instantiation
+    }   
     
      private validateUnitOfMeasure(): void {
         if (!Object.values(UnitOfMeasure).includes(this.unitOfMeasure as UnitOfMeasure)) {
