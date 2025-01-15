@@ -1,22 +1,15 @@
-import { PriceAgreementDto, ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
+import {ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 
 
 
 
 
-export interface PricingRepository {
-    createPriceAgreement(params:PriceAgreementDto):Promise<PriceAgreementDto>;
-    createRackPrice(rackPrice: RackPriceDto): Promise<RackPriceDto>;
-    getProductById(productId: string): Promise<ProductDto>;
-    getAllRackPricing(): Promise<RackPriceDto[]> ;
-    getAllPriceAgreements():Promise<PriceAgreementDto[]>;
-    getAllProducts(): Promise<ProductDto[]>
-    getOneUOMAndGallonFactor(productId: string, containerId: string, uom: string): Promise<{unitsOfMeasureInAContainer: number,gallonsInAContainer: number}>;    
-    getManyUOMAndGallonFactor(): Promise<ConversionFactorType>   
+export interface PricingRepository { 
+    getAllRackPricing(): Promise<RackPriceDto[]> ; 
+    getRackPriceByKey(key:{[key:string]:[keyof RackPriceDto]}): Promise<RackPriceDto>; 
+    upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto>
+    deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto>  
+    getProductById(productId: string): Promise<ProductDto>; /*these would be in a master data repo*/ 
+    getAllProducts(): Promise<ProductDto[]> /*these would be in a master data repo*/ 
 }
 
-export type ConversionFactorType = Record<string, { unitsOfMeasureInAContainer: number, gallonsInAContainer: number }>
-
-export type UOMAndGallonFactorCompositeKeyType = {
-  productId: string, containerId: string, uom: string
-}

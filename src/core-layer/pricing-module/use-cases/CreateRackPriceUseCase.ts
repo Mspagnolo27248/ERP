@@ -16,7 +16,7 @@ export class CreateRackPriceUseCase {
             throw new Error('Product not found');
         }
         
-        return this.pricingResposity.createRackPrice( new RackPrice(rackPriceDto));
+        return this.pricingResposity.upsertRackPrice(rackPriceDto);
     }
 }
 

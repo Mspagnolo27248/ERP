@@ -3,15 +3,12 @@ import { checkBodyMiddleware, RackPriceController } from "../controllers/rack-pr
 
 
 
-//URL: /rack-price
+//URI: /rack-price
 
 const rackPriceRoutes = Router();
 rackPriceRoutes.get("/", RackPriceController.getAll); 
-rackPriceRoutes.get("/:id", async (req: Request, res: Response) => { }); 
-rackPriceRoutes.post('/',  checkBodyMiddleware, RackPriceController.create);
-rackPriceRoutes.put('/:id', async (req: Request, res: Response) => { });
-rackPriceRoutes.delete('/', async (req: Request, res: Response) => { });
-rackPriceRoutes.post('/convert',RackPriceController.convertToGallons);
-rackPriceRoutes.post('/convertAllPrices',RackPriceController.getAllRackPricesConverted);
-
+rackPriceRoutes.get("/:id", checkBodyMiddleware,RackPriceController.getOne); 
+rackPriceRoutes.post('/',  checkBodyMiddleware, RackPriceController.upsert);
+rackPriceRoutes.put('/:id',checkBodyMiddleware, RackPriceController.upsert);
+rackPriceRoutes.delete('/',checkBodyMiddleware, RackPriceController.delete);
 export default rackPriceRoutes;

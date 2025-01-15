@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import rackPriceRoutes from "./routes/rack-price.routes";
-import specialPriceRoutes from "./routes/special-price.routes";
+
 
 
 
@@ -13,7 +13,7 @@ const router = Router();
 /*This should be a list of Resources*/
 
 router.use('/rack-price',rackPriceRoutes);
-router.use('/special-price',specialPriceRoutes);
+//router.use('/special-price',specialPriceRoutes);
 
 
 

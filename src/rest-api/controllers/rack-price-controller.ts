@@ -3,9 +3,9 @@ import { PricingRepositoryImp } from "../../core-layer/pricing-module/data-acces
 import { RackPriceDto } from "../../core-layer/pricing-module/data-transfer-objects/price-records-dtos";
 import { CreateRackPriceUseCase } from "../../core-layer/pricing-module/use-cases/CreateRackPriceUseCase";
 import { PricingRepository } from "../../core-layer/pricing-module/data-access-repository/PricingRepository";
-import { ConvertPriceUseCase } from "../../core-layer/pricing-module/use-cases/ConvertPriceUseCase";
-import { GetRackPricingWithConversionsUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPricingWithConversionUseCase";
 import { GetRackPricingUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPricingUseCase";
+import { GetRackPriceByKeyUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPriceByKeyUseCase";
+import { DeleteRackPriceUseCase } from "../../core-layer/pricing-module/use-cases/DeleteRackPriceUseCase";
 
 const pricingRepository: PricingRepository = new PricingRepositoryImp();
 
@@ -27,11 +27,29 @@ export class RackPriceController {
       }
       return res.status(500).json({ message: "Error" });
     }
-
   }
 
 
-  static async create(req: Request, res: Response) {
+  static async getOne(req: Request, res: Response) {
+    try {
+      const keys = req.body as RackPriceDto;
+      const usecase =  new GetRackPriceByKeyUseCase(pricingRepository);
+      const rackPrice = await usecase.execute(keys);
+      return res.status(201).json(rackPrice);
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(500).json({ message: error.message });
+      } else {
+        console.error("An unknown error occurred");
+      }
+      return res.status(500).json({ message: "Error" });
+    }
+  }
+
+
+
+
+  static async upsert(req: Request, res: Response) {
     try {
       const rackPriceDto = req.body as RackPriceDto;
       const rackPrice = await createRackPriceUseCase.execute(rackPriceDto);
@@ -46,36 +64,21 @@ export class RackPriceController {
     }
   }
 
-  static async convertToGallons(req: Request, res: Response) {
+  static async delete(req: Request, res: Response) {
     try {
-      const priceRecord = req.body as RackPriceDto;
-      const convertPriceUseCase: ConvertPriceUseCase =  new ConvertPriceUseCase(pricingRepository);
-      const convertedPrice = await convertPriceUseCase.execute(priceRecord);
-      return res.status(200).json(convertedPrice);
+      const rackPriceDto = req.body as RackPriceDto;
+      const usecase = new DeleteRackPriceUseCase(pricingRepository);
+      const rackPrice = await usecase.execute(rackPriceDto);
+      return res.status(201).json(rackPrice);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ message: error.message });
       } else {
         console.error("An unknown error occurred");
       }
+      return res.status(500).json({ message: "Error" });
     }
   }
-
-  static async getAllRackPricesConverted(req:Request,res:Response){
-    try {
-      const GetRackPricingWithConversions = new GetRackPricingWithConversionsUseCase(pricingRepository);
-      
-      const convertedRackPrices = await GetRackPricingWithConversions.execute();
-      return res.status(200).json(convertedRackPrices);
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(500).json({ message: error.message });
-      } else {
-        console.error("An unknown error occurred");
-      }
-    }
-  }
-
 
 
 }
@@ -84,19 +87,20 @@ export class RackPriceController {
 
  
 
+
+// Example of Middleware check libriary like ZOD can do this. 
 export const checkBodyMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { productId, containerId, rackPricePerUom, effectiveDate, expirationDate, uom } = req.body;
+  const { productCode, containerCode, rackPricePerUom, effectiveDate, effectiveTime, unitOfMeasure } = req.body;
   if (
-    typeof productId !== "string" ||
-    typeof containerId !== "string" ||
-    typeof rackPricePerUom !== "number" ||   
-    typeof uom !== "string"||
+    typeof productCode !== "string" ||
+    typeof containerCode !== "string" ||
+    typeof unitOfMeasure !== "string"||
     typeof effectiveDate !== "number"||
-    typeof expirationDate !== "number"
+    typeof effectiveTime !== "number"
   ) {
     return res.status(400).json({ error: "Invalid request body. Ensure all fields are correct." });
   } else {
@@ -106,3 +110,5 @@ export const checkBodyMiddleware = (
 
 
 };
+
+
