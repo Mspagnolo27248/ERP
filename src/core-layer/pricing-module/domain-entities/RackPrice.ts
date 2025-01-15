@@ -1,8 +1,9 @@
+import { Entity } from "../../general/Entity";
 import { RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 import { UnitOfMeasure } from "../enums/price-record-enums";
 
 
-export class RackPrice {
+export class RackPrice extends Entity {
     companyNumber: number;
     location: string;
     productCode: string;
@@ -26,11 +27,12 @@ export class RackPrice {
     private rackPricePerGallon?: number;
 
     constructor(rackPriceDto: RackPriceDto) {
+        super();
         this.companyNumber = rackPriceDto.companyNumber;
         this.location = rackPriceDto.location;
         this.productCode = rackPriceDto.productCode;
         this.containerCode = rackPriceDto.containerCode;
-        this.unitOfMeasure = rackPriceDto.unitOfMeasure;
+        this.unitOfMeasure = rackPriceDto.unitOfMeasure.trim();
         this.effectiveDate = rackPriceDto.effectiveDate;
         this.effectiveTime = rackPriceDto.effectiveTime;
         this.price = rackPriceDto.price;
