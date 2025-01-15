@@ -5,6 +5,6 @@ export abstract class Entity {
         for (const key of properties) {
             dto[key] = (this as any)[key];
         }
-        return dto;
+        return dto as typeof this;
     }
 }

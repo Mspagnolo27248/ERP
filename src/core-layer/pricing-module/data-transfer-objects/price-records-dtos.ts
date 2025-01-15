@@ -35,10 +35,24 @@ endDate: number;
 
 
 export interface ProductDto {
-    productId: string;
+    productId: string ;
     productName: string;
-    apiGravity: number;   
- 
+    companyNumber: number;
+    inactiveDate: number;
+    TPPLGR: number;
+    productClass: number ;
+    productGroup: string ;
+    toCompany: number ;
+    shortDescription: string ;
+    priceClass: string ;
+    apiGravity: number ;
+    inventoryGroup: string ;
+    salesGL: number ;
+    abbreviatedDescription: string ;
+    sellIndicator: string ;
+    viscosityFlowCode: string ;
+    isFluid: string ;
+    reportingSlate: string ;
 }
-
+  
 

@@ -7,6 +7,16 @@ import { GetRackPricingUseCase } from "../../core-layer/pricing-module/use-cases
 import { GetRackPriceByKeyUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPriceByKeyUseCase";
 import { DeleteRackPriceUseCase } from "../../core-layer/pricing-module/use-cases/DeleteRackPriceUseCase";
 import { handleError } from "../utility/error-handler";
+/*
+              **** Presentaton Layer: Controllers ************
+ 1. **Receiving Request Input**: Handles incoming requests from routes and prepares to send responses back.
+ 2. **Parsing Input Request**: Extracts and type checks input data from the request object (e.g., body, query, params). 
+      - Focus on type checking to ensure the data is in the expected format before passing it to use-cases.
+      - Avoid performing business logic validation at this stage.
+ 3. **Dependency Injection**: Instantiates required repositories and services, injecting them into use-cases for execution.
+ 4. **Returning HTTP Responses**: Uses the response object to send appropriate HTTP responses. 
+      - Example: `200 OK` for successful operations or `400 Bad Request` for invalid input.
+*/
 
 const pricingRepository: PricingRepository = new PricingRepositoryImp();
 
