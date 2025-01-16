@@ -1,6 +1,7 @@
+import { AppError } from "../../general/AppError";
 import { UseCase } from "../../general/UseCase";
 import { PricingRepository } from "../data-access-repository/PricingRepository";
-import { RackPriceDto } from "../data-transfer-objects/price-records-dtos";
+import { RackPriceDto, RackPriceKeys } from "../data-transfer-objects/price-records-dtos";
 import { RackPrice } from "../domain-entities/RackPrice";
 
 export class GetRackPriceByKeyUseCase implements UseCase {
@@ -10,13 +11,13 @@ export class GetRackPriceByKeyUseCase implements UseCase {
         this.pricingRepository = pricingRepository;
     }
 
-    async execute(keys:RackPriceDto): Promise<RackPriceDto> {
+    async execute(keys:RackPriceKeys): Promise<RackPriceDto> {
         try {
             const record = await this.pricingRepository.getRackPriceByKey(keys);
             const entity = new RackPrice(record);
             return entity
         } catch (error) {         
-            throw new Error('Failed to fetch rack pricing');
+            throw new AppError('Failed to fetch rack pricing');
         }
     }
 }

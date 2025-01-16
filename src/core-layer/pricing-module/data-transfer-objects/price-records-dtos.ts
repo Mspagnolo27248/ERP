@@ -24,6 +24,16 @@ export interface RackPriceDto {
     inactiveFlag: string;         // RKINAC 
 }
 
+export interface RackPriceKeys
+{
+location:string
+productCode:string;
+containerCode:string;
+unitOfMeasure:string;
+effectiveDate:string;
+effectiveTime:number;
+}
+
 export interface PriceAgreementDto {
 productCode: string;
 containerCode: string;

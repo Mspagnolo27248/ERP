@@ -7,6 +7,7 @@ export class RackPriceModel extends ORM implements RackPriceDto {
     @TableColumn('RKCONO')
     companyNumber: number = 0; // RKCONO, initialized with 0
 
+    @KeyField
     @TableColumn('RKLOC')
     location: string = ''; // RKLOC, initialized with empty string
 
