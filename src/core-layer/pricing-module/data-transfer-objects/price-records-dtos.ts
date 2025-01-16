@@ -37,7 +37,7 @@ endDate: number;
 export interface ProductDto {
     productId: string ;
     productName: string;
-    companyNumber: number;
+    companyNumber: string;
     inactiveDate: number;
     TPPLGR: number;
     productClass: number ;
@@ -52,7 +52,8 @@ export interface ProductDto {
     sellIndicator: string ;
     viscosityFlowCode: string ;
     isFluid: string ;
-    reportingSlate: string ;
+    lbsPerGallon?:number;
+
 }
   
 

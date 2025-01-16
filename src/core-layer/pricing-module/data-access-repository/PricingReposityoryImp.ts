@@ -44,9 +44,9 @@ export class PricingRepositoryImp implements PricingRepository {
   }
 
 
-  async getRackPriceByKey(key: { [key: string]: [keyof RackPriceDto] }): Promise<RackPriceDto> {
+  async getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto> {
     try {
-      return await RackPriceModel.findByKey(key);
+      return await RackPriceModel.findByKey(keys);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(`Error executing getAllRackPricing() ${error.message}`);

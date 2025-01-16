@@ -3,7 +3,7 @@ import { Entity } from "../../general/Entity";
 export class Product extends Entity {
     productId: string;
     productName: string;
-    companyNumber: number;
+    companyNumber: string;
     inactiveDate: number;
     TPPLGR: number;
     productClass: number;
@@ -18,13 +18,12 @@ export class Product extends Entity {
     sellIndicator: string;
     viscosityFlowCode: string;
     isFluid: string;
-    reportingSlate: string;
     lbsPerGallon:number;
 
     constructor({
         productId = '',
         productName = '',
-        companyNumber = 0,
+        companyNumber = '',
         inactiveDate = 0,
         TPPLGR = 0,
         productClass = 0,
@@ -38,34 +37,33 @@ export class Product extends Entity {
         abbreviatedDescription = '',
         sellIndicator = '',
         viscosityFlowCode = '',
-        isFluid = '',
-        reportingSlate = ''
+        isFluid = ''
     }) {
         super();
-        if (typeof productId !== 'string' || typeof productName !== 'string' || typeof companyNumber !== 'number') {
+        if (typeof productId !== 'string' || typeof productName !== 'string' || typeof companyNumber !== 'string') {
             throw new Error("Invalid data types for ProductModel constructor arguments.");
         }
         this.productId = productId;
         this.productName = productName;
         this.companyNumber = companyNumber;
-        this.inactiveDate = inactiveDate;
+        this.inactiveDate = parseInt(`${inactiveDate}`);
         this.TPPLGR = TPPLGR;
         this.productClass = productClass;
         this.productGroup = productGroup;
         this.toCompany = toCompany;
         this.shortDescription = shortDescription;
         this.priceClass = priceClass;
-        this.apiGravity = apiGravity;
+        this.apiGravity = parseFloat(`${apiGravity}`);
         this.inventoryGroup = inventoryGroup;
         this.salesGL = salesGL;
         this.abbreviatedDescription = abbreviatedDescription;
         this.sellIndicator = sellIndicator;
         this.viscosityFlowCode = viscosityFlowCode;
         this.isFluid = isFluid;
-        this.reportingSlate = reportingSlate;
-        this.lbsPerGallon = this.lbsPerGallonFromGravity(apiGravity)
+        this.lbsPerGallon = this.lbsPerGallonFromGravity(this.apiGravity)
     }
 
+    //Example of Domain Logic  "Crititcal Business Rules" 
     private lbsPerGallonFromGravity(apigravity: number) {
         let lbsPerGallon: number;
         const WATER_API: number = 8.3390317

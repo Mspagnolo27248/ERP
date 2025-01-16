@@ -12,7 +12,7 @@ export class ProductModel extends ORM implements ProductDto {
     productName: string = '';
 
     @TableColumn('TPCONO')
-    companyNumber: number = 0;
+    companyNumber: string = '';
 
     @TableColumn('TPIND8')
     inactiveDate: number = 0;
