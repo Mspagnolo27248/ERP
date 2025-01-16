@@ -29,7 +29,7 @@ export class RackPriceController {
     const usecase = new GetRackPricingUseCase(pricingRepository);
     try {
       const rackPrices = await usecase.execute();
-      return res.status(201).json(rackPrices);
+      return res.status(200).json(rackPrices);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ message: error.message });
@@ -46,7 +46,7 @@ export class RackPriceController {
       const keys = req.body as RackPriceDto;
       const usecase =  new GetRackPriceByKeyUseCase(pricingRepository);
       const rackPrice = await usecase.execute(keys);
-      return res.status(201).json(rackPrice);
+      return res.status(200).json(rackPrice);
     } catch (error) {
       handleError(res,error);
     }
@@ -75,7 +75,7 @@ export class RackPriceController {
       const rackPriceDto = req.body as RackPriceDto;
       const usecase = new DeleteRackPriceUseCase(pricingRepository);
       const rackPrice = await usecase.execute(rackPriceDto);
-      return res.status(201).json(rackPrice);
+      return res.status(204).json(rackPrice);
     } catch (error) {
       if (error instanceof Error) {
         return res.status(500).json({ message: error.message });
