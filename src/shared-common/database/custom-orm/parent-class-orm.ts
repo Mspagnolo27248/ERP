@@ -98,9 +98,13 @@ export class ORM {
     const tableName = this.getTableName();
     const model = this.instantiateModelFromDTO(instance);
     const keyFields = this.getKeyFields();
-    const keyValues: string[] = [];
-    keyFields.forEach((key) => keyValues.push(`${key}=${model[key]}`));
-    const params = keyValues.join(", ");
+    const modelToColumnMapping = this.getModelToTableFieldMap();
+    const keyValues: string[] = keyFields.map((key) => {
+      const columnName = modelToColumnMapping[key];
+      const value = model[key];
+      return `${columnName}=${typeof value === "string" ? `'${value}'` : value}`;
+    });
+    const params = keyValues.join(" AND ");
     const sql = `DELETE FROM ${tableName} WHERE ${params}`;
 
      try {

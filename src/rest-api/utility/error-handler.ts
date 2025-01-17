@@ -16,6 +16,10 @@ export function handleError(res: Response, error: unknown): Response {
         return res.status(error.statusCode).json({ message: error.message }); // Custom App Errors
     }
 
+    if (error instanceof Error) {
+        return res.status(500).json({ message: error.message }); // Custom App Errors
+    }
+
     console.error("Unexpected error occurred:", error);
     return res.status(500).json({ message: "An unexpected error occurred" }); // Fallback for unknown errors
 }
