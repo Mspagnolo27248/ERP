@@ -1,3 +1,4 @@
+import { AppError } from "../../general/AppError";
 import { PricingRepository } from "../data-access-repository/PricingRepository";
 import { RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 import { RackPrice } from "../domain-entities/RackPrice";
@@ -37,22 +38,22 @@ export class CreateRackPriceUseCase {
 
         // Business Rule: Price should be within the range
         if (!(rackPriceDto.price > 0.01 && rackPriceDto.price < 99.0)) {
-            throw new Error('Rack price must be between 0.01 and 99.0');
+            throw new AppError('Rack price must be between 0.01 and 99.0');
         }
 
         // Business Rule: Effective date must be in the future
         if (effectiveDate <= today) {
-            throw new Error('Effective date must be greater than today');
+            throw new AppError('Effective date must be greater than today');
         }
 
         // Business Rule: Effective time must be between 0 and 2400
         if (!(rackPriceDto.effectiveTime >= 0 && rackPriceDto.effectiveTime <= 2400)) {
-            throw new Error('Effective time must be between 0 and 2400');
+            throw new AppError('Effective time must be between 0 and 2400');
         }
 
         // Business Rule: Minimum quantity must be non-negative
         if (rackPriceDto.minimumQuantity < 0) {
-            throw new Error('Minimum quantity cannot be negative');
+            throw new AppError('Minimum quantity cannot be negative');
         }
 
         // Business Rule: Required flag should be "Y" or "N"
