@@ -5,6 +5,7 @@ import router from "./rest-api/router";
 import cors from 'cors';
 import { swaggerSpec } from './swaggerConfig'
 import swaggerUi from 'swagger-ui-express';
+import { registerDependencies } from "./shared-common/dependancy-injection/registar-dependanies";
 
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 });
 
 // Middleware to parse JSON request bodies globally
+registerDependencies();//Register Dependacy Injection Container
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ limit: '2mb', extended: true }));
 app.use('/', router);
