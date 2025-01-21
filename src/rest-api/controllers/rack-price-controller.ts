@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { PricingRepositoryImp } from "../../core-layer/pricing-module/data-access-repository/PricingReposityoryImp";
 import { RackPriceDto } from "../../core-layer/pricing-module/data-transfer-objects/price-records-dtos";
-import { CreateRackPriceUseCase } from "../../core-layer/pricing-module/use-cases/CreateRackPriceUseCase";
-import { PricingRepository } from "../../core-layer/pricing-module/data-access-repository/PricingRepository";
-import { GetRackPricingUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPricingUseCase";
-import { GetRackPriceByKeyUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPriceByKeyUseCase";
-import { DeleteRackPriceUseCase } from "../../core-layer/pricing-module/use-cases/DeleteRackPriceUseCase";
 import { handleError } from "../utility/error-handler";
+import { container } from "../../shared-common/dependancy-injection/register-dependanies";
 /*
               **** Presentaton Layer: Controllers ************
  1. **Receiving Request Input**: Handles incoming requests from routes and prepares to send responses back.
@@ -19,16 +14,16 @@ import { handleError } from "../utility/error-handler";
       - Example: `200 OK` for successful operations or `400 Bad Request` for invalid input.
 */
 
-const pricingRepository: PricingRepository = new PricingRepositoryImp();
 
-const createRackPriceUseCase: CreateRackPriceUseCase =  new CreateRackPriceUseCase(pricingRepository);
+
+
 
 
 export class RackPriceController {
 
   static async getAll(req: Request, res: Response){
     const filters = req.body;
-    const usecase = new GetRackPricingUseCase(pricingRepository); 
+    const usecase = container.resolve("GetRackPricingUseCase"); 
     try {
       const rackPrices = await usecase.execute(filters);
       return res.status(200).json(rackPrices);
@@ -41,7 +36,7 @@ export class RackPriceController {
   static async getOne(req: Request, res: Response) {
     try {
       const keys = req.body as RackPriceDto;
-      const usecase =  new GetRackPriceByKeyUseCase(pricingRepository);
+      const usecase =  container.resolve("GetRackPriceByKeyUseCase")
       const rackPrice = await usecase.execute(keys);
       return res.status(200).json(rackPrice);
     } catch (error) {
@@ -54,6 +49,7 @@ export class RackPriceController {
 
   static async upsert(req: Request, res: Response) {
     try {
+      const createRackPriceUseCase = container.resolve("CreateRackPriceUseCase");
       const rackPriceDto = req.body as RackPriceDto;
       const rackPrice = await createRackPriceUseCase.execute(rackPriceDto);
       return res.status(201).json(rackPrice);
@@ -65,7 +61,7 @@ export class RackPriceController {
   static async delete(req: Request, res: Response) {
     try {
       const rackPriceDto = req.body as RackPriceDto;
-      const usecase = new DeleteRackPriceUseCase(pricingRepository);
+      const usecase = container.resolve("DeleteRackPriceUseCase");
       const rackPrice = await usecase.execute(rackPriceDto);
       return res.status(204).json(rackPrice);
     } catch (error) {

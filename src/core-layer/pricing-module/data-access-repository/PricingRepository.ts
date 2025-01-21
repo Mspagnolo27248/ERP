@@ -1,5 +1,5 @@
 import {ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
-import { Product } from "../domain-entities/Product";
+
 
 
 

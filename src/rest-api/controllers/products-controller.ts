@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { container } from "../../shared-common/dependancy-injection/registar-dependanies";
+import { container } from "../../shared-common/dependancy-injection/register-dependanies";
 
 
 

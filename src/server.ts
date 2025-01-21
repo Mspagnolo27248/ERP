@@ -5,7 +5,7 @@ import router from "./rest-api/router";
 import cors from 'cors';
 import { swaggerSpec } from './swaggerConfig'
 import swaggerUi from 'swagger-ui-express';
-import { registerDependencies } from "./shared-common/dependancy-injection/registar-dependanies";
+import { registerDependencies } from "./shared-common/dependancy-injection/register-dependanies";
 
 
 dotenv.config();

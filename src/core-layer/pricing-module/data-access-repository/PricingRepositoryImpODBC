@@ -1,0 +1,60 @@
+
+import { ProductDto, RackPriceDto } from '../data-transfer-objects/price-records-dtos'
+import { PricingRepository } from './PricingRepository'
+
+
+
+
+export class PricingRepositoryImpODBC implements PricingRepository {
+
+    getAllProducts(): Promise<ProductDto[]> {
+        try {
+            return Promise.resolve([] as ProductDto[]);
+        } catch (error) {
+            throw new Error(JSON.stringify(error));
+        }
+    }
+
+    getProductById(productId: string): Promise<ProductDto> {
+        try {
+            return Promise.resolve({} as ProductDto);
+        } catch (error) {
+            throw new Error(JSON.stringify(error));
+        }
+    }
+
+    getAllRackPricing(): Promise<RackPriceDto[]> {
+        try {
+            return Promise.resolve([] as RackPriceDto[]);
+        } catch (error) {
+            throw new Error(JSON.stringify(error));
+        }
+    }
+    getRackPriceByKey(keys: Partial<RackPriceDto>): Promise<RackPriceDto> {
+        try {
+            return Promise.resolve({} as RackPriceDto);
+        } catch (error) {
+            throw new Error(JSON.stringify(error));
+        }
+    }
+
+
+    deleteRackPrice(instance: RackPriceDto): Promise<RackPriceDto> {
+        try {            
+            return Promise.resolve({} as RackPriceDto);
+        } catch (error) {
+            throw new Error(JSON.stringify(error));
+        }
+    }        
+
+
+    async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {
+        try {            
+            return Promise.resolve({} as RackPriceDto);
+        } catch (error) {
+            throw new Error(JSON.stringify(error));
+        }
+    }
+
+
+}
