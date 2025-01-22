@@ -1,9 +1,10 @@
 import { ProductDto } from "../../../../core-layer/pricing-module/data-transfer-objects/price-records-dtos";
 import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
 import { ORM } from "../parent-class-orm";
+import { ORMODBC } from "../parent-class-orm-odbc";
 
 @ARGModel('GGSPROD')
-export class ProductModel extends ORM implements ProductDto {
+export class ProductModel extends ORMODBC implements ProductDto {
     @KeyField
     @TableColumn('TPPROD')
     productId: string = '';

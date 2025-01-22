@@ -18,4 +18,5 @@ rackPriceRoutes.post('/',  checkBodyMiddleware, RackPriceController.upsert);
 rackPriceRoutes.put('/:id',checkBodyMiddleware, RackPriceController.upsert);  
 rackPriceRoutes.delete('/',checkBodyMiddleware, RackPriceController.delete);  
 
+
 export default rackPriceRoutes;

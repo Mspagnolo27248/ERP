@@ -1,4 +1,5 @@
 import { PricingRepository } from "../../core-layer/pricing-module/data-access-repository/PricingRepository";
+import { PricingRepositoryImpODBC } from "../../core-layer/pricing-module/data-access-repository/PricingRepositoryImpODBC";
 import { PricingRepositoryImp } from "../../core-layer/pricing-module/data-access-repository/PricingReposityoryImp";
 import { CreateRackPriceUseCase } from "../../core-layer/pricing-module/use-cases/CreateRackPriceUseCase";
 import { DeleteRackPriceUseCase } from "../../core-layer/pricing-module/use-cases/DeleteRackPriceUseCase";
@@ -30,7 +31,7 @@ import { DIContainer } from "./DependencyContainer";
   export function registerDependencies(){
 
     //Repository
-    container.register("PricingRepository", () => new PricingRepositoryImp());
+    container.register("PricingRepository", () => new PricingRepositoryImpODBC());
 
     //UseCases
     container.register("GetProductByIdUseCase", () => new GetProductByIdUseCase(container.resolve("PricingRepository")));
