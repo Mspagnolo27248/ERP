@@ -49,27 +49,27 @@ export class RackPriceController {
   
  
 
-  static async upsert(req: Request, res: Response) {
-    try {
-      const createRackPriceUseCase = container.resolve("CreateRackPriceUseCase");
-      const rackPriceDto = req.body as RackPriceDto;
-      const rackPrice = await createRackPriceUseCase.execute(rackPriceDto);
-      return res.status(201).json(rackPrice);
-    } catch (error) {
-      handleError(res,error);
-  }
-}
+//   static async upsert(req: Request, res: Response) {
+//     try {
+//       const createRackPriceUseCase = container.resolve("CreateRackPriceUseCase");
+//       const rackPriceDto = req.body as RackPriceDto;
+//       const rackPrice = await createRackPriceUseCase.execute(rackPriceDto);
+//       return res.status(201).json(rackPrice);
+//     } catch (error) {
+//       handleError(res,error);
+//   }
+// }
 
-  static async delete(req: Request, res: Response) {
-    try {
-      const rackPriceDto = req.body as RackPriceDto;
-      const usecase = container.resolve("DeleteRackPriceUseCase");
-      const rackPrice = await usecase.execute(rackPriceDto);
-      return res.status(204).json(rackPrice);
-    } catch (error) {
-      handleError(res,error);
-  }
-}
+//   static async delete(req: Request, res: Response) {
+//     try {
+//       const rackPriceDto = req.body as RackPriceDto;
+//       const usecase = container.resolve("DeleteRackPriceUseCase");
+//       const rackPrice = await usecase.execute(rackPriceDto);
+//       return res.status(204).json(rackPrice);
+//     } catch (error) {
+//       handleError(res,error);
+//   }
+// }
 
 
 }

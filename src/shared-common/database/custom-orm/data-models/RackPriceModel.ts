@@ -1,10 +1,10 @@
 import { RackPriceDto } from "../../../../core-layer/pricing-module/data-transfer-objects/price-records-dtos";
 import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
-import { ORM } from "../parent-class-orm";
-import { ORMODBC } from "../parent-class-orm-odbc";
+import { BaseModel } from "../orm/BaseModel";
+
 
 @ARGModel('GBBPRCE')
-export class RackPriceModel extends ORMODBC implements RackPriceDto {
+export class RackPriceModel extends BaseModel implements RackPriceDto {
     @TableColumn('RKCONO')
     companyNumber: number = 0; // RKCONO, initialized with 0
 

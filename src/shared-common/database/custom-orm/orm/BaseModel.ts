@@ -1,19 +1,20 @@
+import { ConnectionManager, DatabaseConnection } from "./ConnectionManager";
 
 
-export interface ORMDatabaseAdapter {
-    getConnection(): Promise<any>;
-    executeQuery(db: any, query: string): Promise<any>;
-    closeConnection(db: any): Promise<void>;
+export   class BaseModel  {
+
+  private static connectionManager = ConnectionManager.getInstance();
+
+  static get getConnection(): DatabaseConnection {
+    return this.connectionManager.getConnection();
   }
-  
 
-export   class AbstractORM  {
-
-  static async findAll<T extends Record<string, any>>(this: typeof AbstractORM & ORMDatabaseAdapter): Promise<any> {
+  static async findAll<T extends Record<string, any>>(this: typeof BaseModel ): Promise<any> {
     const tableName = this.getTableName();
-    const db  = await  this.getConnection()
+    const db  =   this.getConnection
+    await db.connect();
     const rawTableRecords = await db.executeQuery(`SELECT * FROM ${tableName}`);
-    await db.closeConnection();
+    await db.disconnect();
     const modelInstances = rawTableRecords.map((record:T) =>
       this.mapRecordToModel(record, this)
     );
@@ -21,7 +22,7 @@ export   class AbstractORM  {
   }
 
 
-  static async findByKey<T extends Record<string, any>>(this: typeof AbstractORM & ORMDatabaseAdapter,filters: Partial<T>): Promise<any> {
+  static async findByKey<T extends Record<string, any>>(this: typeof BaseModel ,filters: Partial<T>): Promise<any> {
     const tableName = this.getTableName();
     if (!filters || Object.keys(filters).length === 0) {
       throw new Error("No filters provided for the search.");
@@ -48,9 +49,10 @@ export   class AbstractORM  {
     const sql = `SELECT * FROM ${tableName} ${whereClause}`;
 
     try {
-        const db  = await  this.getConnection();
-      const rawRecords = await db.query(sql); // Execute the query
-      await db.close();
+        const db  =   this.getConnection;
+        await db.connect();
+      const rawRecords = await db.executeQuery(sql); // Execute the query
+      await db.disconnect();
       const modelInstances = rawRecords.map((record:T) =>
         this.mapRecordToModel(record, this)
       );
@@ -68,7 +70,7 @@ export   class AbstractORM  {
 
 
   //Protected methods
-  protected static getModelToTableFieldMap(this: typeof AbstractORM & ORMDatabaseAdapter) {
+  protected static getModelToTableFieldMap(this: typeof BaseModel) {
     const columns =
       Reflect.get(this.prototype, "columns") ||
       {}; /* {'proper1':'tableFiel1'} */
@@ -83,7 +85,7 @@ export   class AbstractORM  {
     return Reflect.get(this.prototype, "keyFields") as [];
   }
 
-  protected static mapRecordToModel<T extends Record<string, any>>(this: typeof AbstractORM & ORMDatabaseAdapter,record: any, model: Constructor<T>): T {
+  protected static mapRecordToModel<T extends Record<string, any>>(this: typeof BaseModel,record: any, model: Constructor<T>): T {
     const modelToColumnMapping = this.getModelToTableFieldMap();
     const instance = new model();
     const keys = Object.keys(instance);

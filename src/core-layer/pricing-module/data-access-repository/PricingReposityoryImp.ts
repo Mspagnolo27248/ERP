@@ -34,14 +34,14 @@ export class PricingRepositoryImp implements PricingRepository {
   }
 
 
-  async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {
-    try {
-      const results = await RackPriceModel.upsert(rackPriceDto);
-      return results;
-    } catch (error) {
-      throw new Error(JSON.stringify(error));
-    }
-  }
+  // async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {
+  //   try {
+  //     const results = await RackPriceModel.upsert(rackPriceDto);
+  //     return results;
+  //   } catch (error) {
+  //     throw new Error(JSON.stringify(error));
+  //   }
+  // }
 
 
   async getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto> {
@@ -56,16 +56,16 @@ export class PricingRepositoryImp implements PricingRepository {
   }
 
 
-  async deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> {
-    try {
-      return await RackPriceModel.delete(instance);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error executing getAllRackPricing() ${error.message}`);
-      }
-      throw new Error("Error executing getAllRackPricing()");
-    }
-  }
+  // async deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> {
+  //   try {
+  //     return await RackPriceModel.delete(instance);
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       throw new Error(`Error executing getAllRackPricing() ${error.message}`);
+  //     }
+  //     throw new Error("Error executing getAllRackPricing()");
+  //   }
+  // }
 
 
   async getProductById(productId: string): Promise<ProductDto> {
