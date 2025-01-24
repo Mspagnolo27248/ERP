@@ -1,3 +1,4 @@
+import { ApplicationError } from "../../general/Errors/errors";
 import { UseCase } from "../../general/UseCase";
 import { PricingRepository } from "../data-access-repository/PricingRepository";
 import { RackPriceDto } from "../data-transfer-objects/price-records-dtos";
@@ -30,9 +31,9 @@ export class GetRackPricingUseCase implements UseCase {
     private transformToDomainEntities(data: RackPriceDto[]): RackPrice[] {
         return data.map(item => {
             try {
-                return new RackPrice(item);
+                return new RackPrice(item).toDTO(); // Return the DTO instead of the entity to avoid exposing the internal structure of the entity.
             } catch (err) {
-                throw err
+                throw new ApplicationError(err);
             }
         });
     }
