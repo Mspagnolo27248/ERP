@@ -1,5 +1,6 @@
 import { ProductModel } from "../../../shared-common/database/custom-orm/data-models/ProductModel";
 import { RackPriceModel } from "../../../shared-common/database/custom-orm/data-models/RackPriceModel";
+import {  InfrastructureError } from "../../general/Errors/errors";
 import { ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 import { PricingRepository } from "./PricingRepository";
 
@@ -26,10 +27,7 @@ export class PricingRepositoryImp implements PricingRepository {
     try {
       return await RackPriceModel.findAll() as Promise<RackPriceDto[]>;
     } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error executing getAllRackPricing() ${error.message}`);
-      }
-      throw new Error("Error executing getAllRackPricing()");
+      throw new InfrastructureError(error);
     }
   }
 
@@ -48,10 +46,7 @@ export class PricingRepositoryImp implements PricingRepository {
     try {
       return await RackPriceModel.findByKey(keys);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error executing getAllRackPricing() ${error.message}`);
-      }
-      throw new Error("Error executing getAllRackPricing()");
+      throw new InfrastructureError(error);
     }
   }
 

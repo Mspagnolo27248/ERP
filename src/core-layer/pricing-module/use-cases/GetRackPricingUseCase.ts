@@ -23,7 +23,7 @@ export class GetRackPricingUseCase implements UseCase {
             return rackPriceEntities.slice(0, limit);
 
         } catch (error) {
-            throw new Error('Failed to fetch rack pricing');
+            throw new ApplicationError(error,'Failed to fetch rack pricing');
         }
     }
 
@@ -33,7 +33,7 @@ export class GetRackPricingUseCase implements UseCase {
             try {
                 return new RackPrice(item).toDTO(); // Return the DTO instead of the entity to avoid exposing the internal structure of the entity.
             } catch (err) {
-                throw new ApplicationError(err);
+                throw new ApplicationError(err,"Error transforming rack pricing to domain entities");
             }
         });
     }

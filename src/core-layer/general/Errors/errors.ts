@@ -17,7 +17,7 @@ export abstract class BaseError extends Error {
 export class DomainError extends BaseError {
     constructor(error:any,fallBackMessage?: string) {
         let message = fallBackMessage||'Domain Error'
-        if(error instanceof Error) message = error.message;
+        if(error instanceof Error) message = `${error.message} - ${message}`;
         super('DomainError', message);
     }
 }
@@ -27,7 +27,7 @@ export class DomainError extends BaseError {
 export class ApplicationError extends BaseError {
     constructor(error:any,fallBackMessage?: string) {
         let message = fallBackMessage||'Application Error'
-        if(error instanceof Error) message = error.message;
+        if(error instanceof Error) message = `${error.message} - ${message}`;
         super('ApplicationError', message);
     }
 }
@@ -37,7 +37,7 @@ export class ApplicationError extends BaseError {
 export class InfrastructureError extends BaseError {
     constructor(error:any,fallBackMessage?: string) {
         let message = fallBackMessage||'Infrastructure Error'
-        if(error instanceof Error) message = error.message;
+        if(error instanceof Error) message = `${error.message} - ${message}`;
         super('InfrastructureError', message);
     }
 }
