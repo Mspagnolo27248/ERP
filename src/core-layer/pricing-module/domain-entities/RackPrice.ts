@@ -1,6 +1,6 @@
 import { Entity } from "../../general/Entity";
 import { RackPriceDto } from "../data-transfer-objects/price-records-dtos";
-import { UnitOfMeasure } from "../enums/price-record-enums";
+import { UnitOfMeasure } from "../domain-enums/price-record-enums";
 
 
 export class RackPrice extends Entity {

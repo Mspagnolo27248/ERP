@@ -1,5 +1,5 @@
 import { OrderDetailDTO } from "../../../../core-layer/pricing-module/data-transfer-objects/order-entry-dtos";
-import { UnitOfMeasure } from "../../../../core-layer/pricing-module/enums/price-record-enums";
+import { UnitOfMeasure } from "../../../../core-layer/pricing-module/domain-enums/price-record-enums";
 import { ARGModel, IdentityColumn, KeyField, TableColumn } from "../orm-decorators";
 import { ORM } from "../parent-class-orm";
 

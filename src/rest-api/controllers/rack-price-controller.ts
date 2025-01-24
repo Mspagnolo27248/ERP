@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { RackPriceDto } from "../../core-layer/pricing-module/data-transfer-objects/price-records-dtos";
 import { handleError } from "../utility/error-handler";
-import { container } from "../../shared-common/dependancy-injection/register-dependanies";
+import { container } from "../../shared-common/dependency-injection/register-dependencies";
 
 
 /*

@@ -1,4 +1,4 @@
-import { UnitOfMeasure } from "../enums/price-record-enums";
+import { UnitOfMeasure } from "../domain-enums/price-record-enums";
 
 
 

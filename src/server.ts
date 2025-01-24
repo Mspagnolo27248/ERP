@@ -5,7 +5,7 @@ import router from "./rest-api/router";
 import cors from 'cors';
 import { swaggerSpec } from './swaggerConfig'
 import swaggerUi from 'swagger-ui-express';
-import { registerDependencies } from "./shared-common/dependancy-injection/register-dependanies";
+import { registerDependencies } from "./shared-common/dependency-injection/register-dependencies";
 import { ConnectionManager } from "./shared-common/database/custom-orm/orm/ConnectionManager";
 import path from 'path';
 
