@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { RackPriceDto } from "../../core-layer/pricing-module/data-transfer-objects/price-records-dtos";
-import { handleError } from "../utility/error-handler";
+
 import { container } from "../../shared-common/dependency-injection/register-dependencies";
+import { withHttpErrorHandling } from "../utility/error-handler";
 
 
 /*
@@ -23,28 +24,25 @@ import { container } from "../../shared-common/dependency-injection/register-dep
 
 export class RackPriceController {
 
+  @withHttpErrorHandling()
   static async getAll(req: Request, res: Response){
     const filters = req.body;
-    const usecase = container.resolve("GetRackPricingUseCase"); 
-    try {
+    const usecase = container.resolve("GetRackPricingUseCase");    
       const rackPrices = await usecase.execute(filters);
       return res.status(200).json(rackPrices);
-    } catch (error) {
-      handleError(res,error)
-  }
+
 }
 
-
+@withHttpErrorHandling()
   static async getOne(req: Request, res: Response) {
-    try {
       const keys = req.body as RackPriceDto;
       const usecase =  container.resolve("GetRackPriceByKeyUseCase")
-      const rackPrice = await usecase.execute(keys);
-      return res.status(200).json(rackPrice);
-    } catch (error) {
-      handleError(res,error);
+      const rackPrice = await usecase.execute(keys);   
+      return res.status(200).json(rackPrice);   
     }
-  }
+
+
+  
 
   
  

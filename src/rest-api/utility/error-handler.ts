@@ -1,9 +1,8 @@
-import { Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { ApplicationError, DomainError, InfrastructureError } from "../../core-layer/general/Errors/errors";
 
 
-
-export function handleError(res: Response, error: unknown): Response {
+ function handleError(error: any,res: Response): Response {
     if (error instanceof DomainError) {
         return res.status(400).json({ message: error.message }); 
     }
@@ -23,3 +22,25 @@ export function handleError(res: Response, error: unknown): Response {
     console.error("Unexpected error occurred:", error);
     return res.status(500).json({ message: "An unexpected error occurred" }); 
 }
+
+
+// Decorator for error handling
+export function withHttpErrorHandling() {
+    return (
+      target: any,
+      propertyKey: string,
+      descriptor: PropertyDescriptor
+    ) => {
+      const originalMethod = descriptor.value;
+  
+      descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
+        try {
+          await originalMethod.call(this, req, res, next);
+        } catch (error) {
+          handleError(error, res);
+        }
+      };
+  
+      return descriptor;
+    };
+  }
