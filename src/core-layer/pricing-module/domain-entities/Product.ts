@@ -41,7 +41,7 @@ export class Product extends Entity {
     }) {
         super();
         if (typeof productId !== 'string' || typeof productName !== 'string' || typeof companyNumber !== 'string') {
-            this.throwDomainValidationError('Invalid Types string type when instantiating product entity')
+            this.throwDomainError('Invalid Types string type when instantiating product entity')
         }
         this.productId = productId;
         this.productName = productName;

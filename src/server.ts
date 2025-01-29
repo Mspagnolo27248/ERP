@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 registerDependencies();//Register Dependacy Injection Container
 ConnectionManager.getInstance().configureConnection('sqlite',
   {
-    database: path.join('./', 'zdatabase.sqlite')
+    database: path.join('./', 'database.sqlite')
   }
 )
 app.use(express.json({ limit: '2mb' }));

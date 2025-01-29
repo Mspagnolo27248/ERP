@@ -24,7 +24,7 @@ export class GetRackPricingUseCase extends UseCase {
 
         } catch (error) {
             if (error instanceof Error) throw error
-            throw new Error('GetRackPricingUseCase Failed to complete')
+            this.throwApplicationError('GetRackPricingUseCase Failed to complete')
         }
     }
 

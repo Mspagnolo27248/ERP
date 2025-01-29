@@ -16,10 +16,9 @@ export class GetRackPriceByKeyUseCase extends UseCase {
             const record = await this.pricingRepository.getRackPriceByKey(keys);
             const entity = new RackPrice(record);
             return entity.toDTO(); // Return the DTO instead of the entity to avoid exposing the internal structure of the entity.
-
         } catch (error) {
             if(error instanceof Error) throw error
-            this.throwApplicationError();
+            this.throwApplicationError('GetRackPriceByKeyUseCase failed to complete');
         }
     }
 }

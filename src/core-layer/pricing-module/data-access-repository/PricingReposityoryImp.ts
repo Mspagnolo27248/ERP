@@ -15,6 +15,7 @@ import { PricingRepository } from "./PricingRepository";
 // Example Best Practices in Repository Implementation:
 // - Use transactions where necessary for atomic operations.
 // - Ensure all data returned from the database matches the DTO structure expected by the use-cases.
+// - Entities should not be passed to the Repository stick to DTO's you should not be instantiating Domain entities in this layer
 // - Avoid hardcoding SQL queries directly unless required, leveraging ORM features where possible.
 
 
@@ -27,7 +28,21 @@ export class PricingRepositoryImp implements PricingRepository {
   }
 
 
-  // async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {
+  async getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto> { 
+      return await RackPriceModel.findByKey(keys);   
+  }
+
+
+  async getProductById(productId: string): Promise<ProductDto> {
+      return await ProductModel.findByKey({ productId })
+  }
+
+
+  async getAllProducts(): Promise<ProductDto[]> {
+      return await ProductModel.findAll();  
+  }
+
+    // async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {
   //   try {
   //     const results = await RackPriceModel.upsert(rackPriceDto);
   //     return results;
@@ -37,12 +52,7 @@ export class PricingRepositoryImp implements PricingRepository {
   // }
 
 
-  async getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto> { 
-      return await RackPriceModel.findByKey(keys);   
-  }
-
-
-  // async deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> {
+    // async deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> {
   //   try {
   //     return await RackPriceModel.delete(instance);
   //   } catch (error) {
@@ -52,31 +62,6 @@ export class PricingRepositoryImp implements PricingRepository {
   //     throw new Error("Error executing getAllRackPricing()");
   //   }
   // }
-
-
-  async getProductById(productId: string): Promise<ProductDto> {
-    try {
-      return await ProductModel.findByKey({ productId })
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error getting product by ID: ${error.message}`);
-      }
-      throw new Error(`Error getting product by ID: `);
-    }
-  }
-
-
-  async getAllProducts(): Promise<ProductDto[]> {
-    try {
-      return await ProductModel.findAll();
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Error getting rackPriceRecords${error.message}`);
-      }
-      throw new Error("Errpr getting all rackprice records");
-    } finally {
-    }
-  }
 
 
 

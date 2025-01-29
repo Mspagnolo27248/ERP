@@ -20,7 +20,7 @@ export class GetProductUseCase extends UseCase {
             return productEntites;
         } catch (error) {
             if(error instanceof Error) throw error
-            this.throwApplicationError();
+            this.throwApplicationError("GetProductUseCase failed");
         }
         
     }

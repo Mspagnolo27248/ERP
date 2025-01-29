@@ -6,8 +6,7 @@ import { Product } from "../domain-entities/Product";
 
 
 
-export class GetProductByIdUseCase extends UseCase {
-    
+export class GetProductByIdUseCase extends UseCase {    
     pricingRepository:PricingRepository;
     
     constructor(repository:PricingRepository){
@@ -15,17 +14,16 @@ export class GetProductByIdUseCase extends UseCase {
         this.pricingRepository = repository
     }
 
-    async execute(productId:string): Promise<Product> {    
+    async execute(productId:string): Promise<Product> {  
         try {
             const dto =  await this.pricingRepository.getProductById(String(productId))
-            if(!dto) throw new Error("No Product Exists")
+            if(!dto) throw new Error("No Product Exists")          
             const entity = new Product(dto);    
             return entity.toDTO();
+
         } catch (error) {
             if(error instanceof Error) throw error
-            this.throwApplicationError();
+            this.throwApplicationError("GetProductByIdUseCase failed");
         }        
     }
-
-
 }
