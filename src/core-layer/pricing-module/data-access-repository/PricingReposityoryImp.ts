@@ -1,6 +1,5 @@
 import { ProductModel } from "../../../shared-common/database/custom-orm/data-models/ProductModel";
 import { RackPriceModel } from "../../../shared-common/database/custom-orm/data-models/RackPriceModel";
-import {  InfrastructureError } from "../../general/Errors/errors";
 import { ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 import { PricingRepository } from "./PricingRepository";
 
@@ -23,12 +22,8 @@ import { PricingRepository } from "./PricingRepository";
 export class PricingRepositoryImp implements PricingRepository {
 
 
-  async getAllRackPricing(): Promise<RackPriceDto[]> {
-    try {
-      return await RackPriceModel.findAll() as Promise<RackPriceDto[]>;
-    } catch (error) {
-      throw new InfrastructureError(error);
-    }
+  async getAllRackPricing(): Promise<RackPriceDto[]> { 
+      return await RackPriceModel.findAll() as Promise<RackPriceDto[]>;  
   }
 
 
@@ -42,12 +37,8 @@ export class PricingRepositoryImp implements PricingRepository {
   // }
 
 
-  async getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto> {
-    try {
-      return await RackPriceModel.findByKey(keys);
-    } catch (error) {
-      throw new InfrastructureError(error);
-    }
+  async getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto> { 
+      return await RackPriceModel.findByKey(keys);   
   }
 
 

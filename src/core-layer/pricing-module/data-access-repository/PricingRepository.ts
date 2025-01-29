@@ -1,7 +1,11 @@
 import {ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 
 
+/*
+// Repository:  Data Access Interface 
+// 1. Always return a promise. 
 
+*/
 
 
 

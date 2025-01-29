@@ -1,4 +1,3 @@
-import { ApplicationError } from "../../general/Errors/errors";
 import { UseCase } from "../../general/UseCase";
 import { PricingRepository } from "../data-access-repository/PricingRepository";
 import { Product } from "../domain-entities/Product";
@@ -6,10 +5,11 @@ import { Product } from "../domain-entities/Product";
 
 
 
-export class GetProductUseCase implements UseCase {
+export class GetProductUseCase extends UseCase {
     pricingRepository:PricingRepository;
 
     constructor(repository:PricingRepository){
+        super();
         this.pricingRepository = repository
     }
 
@@ -19,7 +19,8 @@ export class GetProductUseCase implements UseCase {
             const productEntites = results.map(item=> new Product(item));    
             return productEntites;
         } catch (error) {
-            throw new ApplicationError(error,"Error fetching products");
+            if(error instanceof Error) throw error
+            this.throwApplicationError();
         }
         
     }

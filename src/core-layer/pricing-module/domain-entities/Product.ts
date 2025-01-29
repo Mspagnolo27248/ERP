@@ -40,9 +40,9 @@ export class Product extends Entity {
         isFluid = ''
     }) {
         super();
-        // if (typeof productId !== 'string' || typeof productName !== 'string' || typeof companyNumber !== 'string') {
-        //     throw new Error("Invalid data types for ProductModel constructor arguments.");
-        // }
+        if (typeof productId !== 'string' || typeof productName !== 'string' || typeof companyNumber !== 'string') {
+            this.throwDomainValidationError('Invalid Types string type when instantiating product entity')
+        }
         this.productId = productId;
         this.productName = productName;
         this.companyNumber = companyNumber;
