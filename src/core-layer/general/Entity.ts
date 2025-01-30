@@ -21,7 +21,9 @@ export abstract class Entity {
     } 
 
     protected throwDomainError(message:string): never {
-        throw new Error(`DomainError:${message}`);
+        const error = new Error(`DomainError:${message}`);  
+        error.name = 'DomainError'
+        throw error
     }
   
  

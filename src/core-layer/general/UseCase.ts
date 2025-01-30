@@ -15,7 +15,9 @@ export abstract class UseCase {
    };
 
    protected throwApplicationError(message:string): never {
-      throw new Error(`ApplicationError:${message}`);
+      const error = new Error(`ApplicationError:${message}`);
+      error.name = 'ApplicationError'
+      throw error
   }
 
 
