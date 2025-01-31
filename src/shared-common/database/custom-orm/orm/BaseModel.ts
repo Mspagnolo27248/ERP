@@ -44,11 +44,23 @@ export class BaseModel {
     return modelInstances[0]; // Return the first matching instance
   }
 
+  static async delete<T extends Record<string, any>>(instance: T): Promise<T> {
+    const tableName = this.getTableName();
+    const model = this.instantiateModelFromDTO(instance);
+    const keyFields = this.getKeyFields();
+    const modelToColumnMapping = this.getModelToTableFieldMap();
+    const whereClause = this.generateSqlWhereClause(keyFields,modelToColumnMapping,model);
+    const sql = `DELETE FROM ${tableName} ${whereClause}`;
+    const db = this.connection;
+    const result = await this.tryExecuteDatabaseOperation(db, sql); //result is of type any due various DB types.
+    return instance; 
+  }
+
   static async update<T extends Record<string, any>>(instance: T): Promise<T> {
     const sql = this.generateUpdateSQL(instance);
     const db = this.connection;
     const result = await this.tryExecuteDatabaseOperation(db, sql);
-    return result;
+    return instance;
   }
 
   static async insert<T extends Record<string, any>>(
@@ -65,31 +77,24 @@ export class BaseModel {
     const sql = this.generateInsertStatment(tableName, record);
     const db = this.connection;
     const result = await this.tryExecuteDatabaseOperation(db, sql);
-    return result;
+    return instance;
 
   }
 
-  static async delete<T extends Record<string, any>>(instance: T): Promise<T> {
-    const tableName = this.getTableName();
-    const model = this.instantiateModelFromDTO(instance);
-    const keyFields = this.getKeyFields();
-    const modelToColumnMapping = this.getModelToTableFieldMap();
-    const whereClause = this.generateSqlWhereClause(keyFields,modelToColumnMapping,model);
-    const sql = `DELETE FROM ${tableName}${whereClause}`;
-    const db = this.connection;
-    const result = await this.tryExecuteDatabaseOperation(db, sql);
-    return result;
-  }
 
-  static async upsert<T extends Record<string, any>>(instance: T): Promise<T> {
+
+  static async upsert<T extends Record<string, any>>(instance: T): Promise<T> { 
     try {
-      return await this.insert(instance);
+      await this.insert(instance);
     } catch (error) {
-      if (error instanceof Error && error.message.includes("constraint")) {
-        return await this.update(instance);
+      try{
+        await this.update(instance);
+      } catch (error:any) {
+        const msg = error?.message ? error.message : "Error executing SQL";
+        throw new Error(msg);     
       }
-      throw error;
     }
+    return instance;  
   }
 
   //Protected methods
@@ -175,15 +180,34 @@ export class BaseModel {
   ) {
     try {
       await db.connect();
-      const result = await db.executeQuery(sql);
-      await db.disconnect();
+      const result = await db.executeQuery(sql);      
       if (!result) throw new Error("Error executing SQL");
       return result;
     } catch (error) {
-      if (error instanceof Error) throw new Error(error.message);
+      if (error instanceof Error) throw error;
       else {
-        throw new Error("SQL Execution did not return any result");
+        throw new Error("Error executing SQL");
       }
+    } finally {
+      await db.disconnect();
+    }
+  }
+
+  protected static async tryExecuteDatabaseTransaction(
+    db: DatabaseConnection,
+    sqlStatements: string[]
+  ) {
+    try {
+      await db.connect();
+  await db.tryTransaction(sqlStatements);     
+      return true;
+    } catch (error) {
+      if (error instanceof Error) throw error;
+      else {
+        throw new Error("Error executing SQL");
+      }
+    } finally {
+      await db.disconnect();
     }
   }
 

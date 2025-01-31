@@ -39,6 +39,7 @@ export interface DatabaseConnection {
     connect(): Promise<void>;
     disconnect(): Promise<void>;
     executeQuery(query: string, params?: any[]): Promise<any>;
+    tryTransaction(statements: string[]): Promise<void>;
 }
 
 
@@ -49,40 +50,64 @@ import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 
 class SQLiteConnection implements DatabaseConnection {
-    private db: Database | null = null;
-    private readonly options: { database: string };
+  private db: Database | null = null;
+  private readonly options: { database: string };
 
-    constructor(options: { database: string }) {
-        this.options = options;
-    }
+  constructor(options: { database: string }) {
+    this.options = options;
+  }
 
-    async connect(): Promise<void> {
-        this.db = await open({
-            filename: this.options.database,
-            driver: sqlite3.Database,
-        });
-        console.log(`Connected to SQLite database: ${this.options.database}`);
-    }
+  async connect(): Promise<void> {
+    this.db = await open({
+      filename: this.options.database,
+      driver: sqlite3.Database,
+    });
+    console.log(`Connected to SQLite database: ${this.options.database}`);
+  }
 
-    async disconnect(): Promise<void> {
-        if (this.db) {
-            await this.db.close();
-            console.log(`Disconnected from SQLite database: ${this.options.database}`);
-        }
+  async disconnect(): Promise<void> {
+    if (this.db) {
+      await this.db.close();
+      console.log(
+        `Disconnected from SQLite database: ${this.options.database}`
+      );
     }
+  }
 
-    async executeQuery(query: string, params: any[] = []): Promise<any> {
-        if (!this.db) {
-            throw new Error('SQLite database is not connected.');
-        }
-        if (query.trim().toUpperCase().startsWith('SELECT')) {
-            return this.db.all(query, params); // Fetch multiple rows for SELECT queries
-        } else {
-            return this.db.run(query, params); // Execute other types of queries
-        }
+  async executeQuery(query: string, params: any[] = []): Promise<any> {
+    if (!this.db) {
+      throw new Error("SQLite database is not connected.");
     }
+    try {
+      if (query.trim().toUpperCase().startsWith("SELECT")) {
+        return await this.db.all(query, params); // Fetch multiple rows for SELECT queries
+      } else {
+        return await this.db.run(query, params); // Execute other types of queries
+      }
+    } catch (error:any) {
+        throw new Error(error?.message ? error.message : "Error executing SQL");
+    }
+  }
+
+  async tryTransaction(statements: string[]): Promise<void> {
+    if (!this.db) {
+      throw new Error("SQLite database is not connected.");
+    }
+    try {
+      await this.db.exec("BEGIN TRANSACTION");
+
+      for (const statement of statements) {
+        await this.db.exec(statement);
+      }
+
+      await this.db.exec("COMMIT");
+    
+    } catch (error) {
+      await this.db.exec("ROLLBACK");
+      throw error;
+    }
+  }
 }
-
 
 
 import * as odbc from 'odbc';
@@ -116,6 +141,10 @@ class ODBCConnection implements DatabaseConnection {
     const formattedQuery = this.formatQuery(query, params);
     const result = await this.connection.query(formattedQuery);
     return result;
+  }
+
+  async tryTransaction(statements: string[]): Promise<void> {
+    throw new Error('Transaction not supported for ODBC.');
   }
 
   private formatQuery(query: string, params: any[]): string {

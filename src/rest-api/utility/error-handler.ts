@@ -20,7 +20,8 @@ import { Request, Response, NextFunction } from "express";
     }
 
     console.error("Unexpected error occurred:", error);
-    return res.status(500).json({ message: "An unexpected error occurred" }); 
+    const msg = error?.message ? error.message : "An unexpected error occurred";
+    return res.status(500).json({ message: msg }); 
 }
 
 
