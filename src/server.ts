@@ -29,7 +29,11 @@ registerDependencies();//Register Dependacy Injection Container
 //   }
 // )
 ConnectionManager.getInstance().configureConnection('odbc',
-  {connectionString:'DSN=IBOXSQL;UID=mstest;PWD=mstest'}
+  {
+    connectionString: 'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;'
+    // Or if using SQL authentication:
+    // connectionString: 'Driver={SQL Server Native Client 11.0};Server=(local);Database=YourDatabaseName;UID=mstest;PWD=mstest;'
+  }
 )
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ limit: '2mb', extended: true }));
