@@ -1,10 +1,11 @@
 
 import { CustomerDto } from "../../../../core-layer/pricing-module/data-transfer-objects/order-entry-dtos";
 import { ARGModel, TableColumn } from "../orm-decorators";
-import { ORM } from "../parent-class-orm";
+import { BaseModel } from "../orm/BaseModel";
+
 
 @ARGModel('GARCUST')
-export class CustomerAccountModel extends ORM implements CustomerDto{
+export class CustomerAccountModel extends BaseModel implements CustomerDto{
     @TableColumn('ARDEL') 
     accountDivision: string = '';
 

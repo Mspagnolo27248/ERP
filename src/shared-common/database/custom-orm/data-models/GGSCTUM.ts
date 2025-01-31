@@ -1,8 +1,8 @@
 import { ARGModel, TableColumn } from "../orm-decorators";
-import { ORM } from "../parent-class-orm";
+import { BaseModel } from "../orm/BaseModel";
 
 @ARGModel()
-export class GGSCTUM extends ORM {
+export class GGSCTUM extends BaseModel {
     @TableColumn('CUDEL')
     actionIndicator: string = '';
 

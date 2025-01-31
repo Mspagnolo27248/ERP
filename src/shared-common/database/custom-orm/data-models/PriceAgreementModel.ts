@@ -1,9 +1,9 @@
 import { PriceAgreementDto } from "../../../../core-layer/pricing-module/data-transfer-objects/price-records-dtos";
 import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
-import { ORM } from "../parent-class-orm";
+import { BaseModel } from "../orm/BaseModel";
 
 @ARGModel('GBICUAG')
-export class PriceAgreementModel extends ORM implements PriceAgreementDto {
+export class PriceAgreementModel extends BaseModel implements PriceAgreementDto {
 
     @TableColumn('BADEL') 
     delete: string = '';

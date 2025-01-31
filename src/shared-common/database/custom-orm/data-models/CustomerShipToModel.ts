@@ -1,10 +1,11 @@
 import { CustomerShipToDTO } from "../../../../core-layer/pricing-module/data-transfer-objects/order-entry-dtos";
 import { ARGModel, TableColumn } from "../orm-decorators";
-import { ORM } from "../parent-class-orm";
+import { BaseModel } from "../orm/BaseModel";
+
 
 
 @ARGModel('CustomerShipTo')
-export class CustomerShipToModel extends ORM implements CustomerShipToDTO {
+export class CustomerShipToModel extends BaseModel implements CustomerShipToDTO {
     @TableColumn('CustomerShipToId')
     customerShipToId: string = '';  // Composite key (ShipToID, CustomerID)
     

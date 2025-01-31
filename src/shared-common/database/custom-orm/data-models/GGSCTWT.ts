@@ -1,8 +1,8 @@
 import { ARGModel, TableColumn } from "../orm-decorators";
-import { ORM } from "../parent-class-orm";
+import { BaseModel } from "../orm/BaseModel";
 
 @ARGModel('GGSCTWT')
-export class GGSCTWT extends ORM {
+export class GGSCTWT extends BaseModel {
     @TableColumn('WTDEL')
     actionIndicator: string = '';
 

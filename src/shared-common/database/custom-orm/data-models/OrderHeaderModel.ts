@@ -1,9 +1,9 @@
 import { OrderHeaderDTO } from "../../../../core-layer/pricing-module/data-transfer-objects/order-entry-dtos";
 import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
-import { ORM } from "../parent-class-orm";
+import { BaseModel } from "../orm/BaseModel";
 
 @ARGModel('OrderHeader')
-export class OrderHeaderModel extends ORM implements OrderHeaderDTO{
+export class OrderHeaderModel extends BaseModel implements OrderHeaderDTO{
     @KeyField
     @TableColumn('OrderID')
     orderID: number = 0;  // Primary key

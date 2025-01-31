@@ -1,8 +1,8 @@
 import { ARGModel, TableColumn } from "../orm-decorators";
-import { ORM } from "../parent-class-orm";
+import { BaseModel } from "../orm/BaseModel";
 
 @ARGModel('GGSUMCV')
-export class UnitConversionModel extends ORM {
+export class UnitConversionModel extends BaseModel {
     @TableColumn('UCDEL')
     actionIndicator: string = '';
 
