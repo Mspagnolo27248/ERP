@@ -4,6 +4,7 @@ import { withHttpErrorHandling } from "../utility/error-handler";
 import { ProductModel } from "../../shared-common/database/custom-orm/data-models/ProductModel";
 
 export class ProductsController {
+
   @withHttpErrorHandling()
   static async getAll(req: Request, res: Response) {
     const getProductsUseCase = container.resolve("GetProductUseCase");
@@ -36,12 +37,12 @@ export class ProductsController {
     return res.status(201).json(data);
   }
 
-//   @withHttpErrorHandling()
-//   static async insert(req: Request, res: Response) {
-//     const product = req.body;
-//     if (!product.productId) throw new Error("Bad ID");
-//     const data = await ProductModel.insert(product);
-//     return res.status(201).json(data);
-//   }
+  @withHttpErrorHandling()
+  static async update(req: Request, res: Response) {
+    const product = req.body;
+    if (!product.productId) throw new Error("Bad ID");
+    const data = await ProductModel.update(product);
+    return res.status(201).json(data);
+  }
 
 }
