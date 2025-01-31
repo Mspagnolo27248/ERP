@@ -14,8 +14,8 @@ export abstract class UseCase {
       throw new Error('Not Implemented')
    };
 
-   protected throwApplicationError(message:string): never {
-      const error = new Error(`ApplicationError:${message}`);
+   protected throwApplicationError(error:any): never {
+      const applicationError = error instanceof Error ? error : new Error('Default Application Error');
       error.name = 'ApplicationError'
       throw error
   }

@@ -28,7 +28,7 @@ export class PricingRepositoryImp  extends Repository implements PricingReposito
     try {     
       return await RackPriceModel.findAll() as Promise<RackPriceDto[]>;  
     } catch (error) {
-      this.thowInfrastuctureError();
+      this.thowInfrastuctureError(error);
     }
   
   }
@@ -38,7 +38,7 @@ export class PricingRepositoryImp  extends Repository implements PricingReposito
     try {
       return await RackPriceModel.findByKey(keys);   
     } catch (error) {
-      this.thowInfrastuctureError();
+      this.thowInfrastuctureError(error);
     }
   }
 

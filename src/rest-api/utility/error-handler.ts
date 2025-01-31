@@ -14,7 +14,7 @@ import { Request, Response, NextFunction } from "express";
             return res.status(400).json({ message: error.message }); 
         }
         if(error.name === 'InfrastructureError'){
-            console.log(error.stack)  
+            // console.log(error.stack)  
             return res.status(500).json({ message: error.message }); 
         }
     }

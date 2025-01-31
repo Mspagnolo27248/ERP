@@ -3,10 +3,10 @@
 
 export abstract class Repository {
 
-     protected thowInfrastuctureError(): never{
-        const error = new Error('Infrastructure Error')
-        error.name = 'InfrastructureError'
-        throw error
+     protected thowInfrastuctureError(error:any):never{
+        const infrastructureError = error instanceof Error ? error : new Error('Default Infrastructure Error');
+        infrastructureError.name = 'InfrastructureError';
+        throw infrastructureError;        
     }
 }
 
