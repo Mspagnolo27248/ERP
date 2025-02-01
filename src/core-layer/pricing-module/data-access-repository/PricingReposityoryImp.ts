@@ -1,7 +1,8 @@
+import { PriceAgreementModel } from "../../../shared-common/database/custom-orm/data-models/PriceAgreementModel";
 import { ProductModel } from "../../../shared-common/database/custom-orm/data-models/ProductModel";
 import { RackPriceModel } from "../../../shared-common/database/custom-orm/data-models/RackPriceModel";
 import { Repository } from "../../general/Repository";
-import { ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
+import { PriceAgreementDto, PriceAgreementKeys, ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 import { PricingRepository } from "./PricingRepository";
 
 // Repository Implementation Responsibilities:
@@ -73,6 +74,8 @@ export class PricingRepositoryImp  extends Repository implements PricingReposito
   //   }
   // }
 
-
+  async getPriceAgreement(keys: PriceAgreementKeys): Promise<PriceAgreementDto> {
+    return await PriceAgreementModel.findByKey({ keys })
+  }
 
 }

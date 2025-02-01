@@ -50,9 +50,10 @@ export class PriceAgreementModel extends BaseModel implements PriceAgreementDto 
     // @TableColumn('BAPR10') 
     // product10: string = '';
 
-    @KeyField
+  
     @TableColumn('BASTDT') 
     startDate: number = 0;
+
 
     @TableColumn('BASTTM') 
     startTime: number = 0;
@@ -63,14 +64,14 @@ export class PriceAgreementModel extends BaseModel implements PriceAgreementDto 
     @TableColumn('BAENTM') 
     endTime: number = 0;
 
-    @TableColumn('BAF004') 
-    filler4: number = 0.0;
+    // @TableColumn('BAF004') 
+    // filler4: number = 0.0;
 
     @TableColumn('BAPRCE') 
     price: string = '';
 
-    @TableColumn('BAF005') 
-    filler5: number = 0.0;
+    // @TableColumn('BAF005') 
+    // filler5: number = 0.0;
 
     @TableColumn('BAOFFP') 
     offRack: number = 0;
@@ -87,15 +88,16 @@ export class PriceAgreementModel extends BaseModel implements PriceAgreementDto 
     @TableColumn('BAALSH') 
     allShipTo: string = '';
 
-    @TableColumn('BAF001') 
-    filler1: string = '';
+    // @TableColumn('BAF001') 
+    // filler1: string = '';
 
     @TableColumn('BAPRIM') 
     priceAtInventory: string = '';
 
-    @TableColumn('BAF002') 
-    filler2: string = '';
+    // @TableColumn('BAF002') 
+    // filler2: string = '';
 
+    @KeyField
     @TableColumn('BASTD8') 
     startDate8Digit: number = 0;
 
@@ -120,15 +122,18 @@ export class PriceAgreementModel extends BaseModel implements PriceAgreementDto 
     @TableColumn('BALUTM') 
     lastUpdateTime: number = 0;
 
+    @KeyField
     @TableColumn('BACNTR') 
     containerCode: string = '';
 
+    @KeyField
     @TableColumn('BASHIP')
     shipTo: string = '';
 
     @TableColumn('BACNTN') 
     contractNumber: number = 0;
 
+    @KeyField
     @TableColumn('BAUNMS') 
     unitMeasurement: string = '';
 
@@ -141,6 +146,6 @@ export class PriceAgreementModel extends BaseModel implements PriceAgreementDto 
     @TableColumn('BAPOOR') 
     purchaseOrderOriginal: number = 0;
 
-    @TableColumn('BAF003') 
-    filler3: string = '';
+    // @TableColumn('BAF003') 
+    // filler3: string = '';
 }

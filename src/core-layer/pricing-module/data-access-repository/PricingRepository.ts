@@ -1,4 +1,4 @@
-import {ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
+import {PriceAgreementDto, PriceAgreementKeys, ProductDto, RackPriceDto, RackPriceKeys } from "../data-transfer-objects/price-records-dtos";
 
 
 /*
@@ -13,10 +13,11 @@ import {ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-
 
 export interface PricingRepository { 
     getAllRackPricing(): Promise<RackPriceDto[]> ; 
-    getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto>;  
+    getRackPriceByKey(keys:RackPriceKeys): Promise<RackPriceDto>;  
     getProductById(productId: string): Promise<ProductDto>; /*these would be in a master data repo here for simplicty*/ 
     getAllProducts(): Promise<ProductDto[]> 
     // upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto>
-    // deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> 
+    // deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto>    
+    getPriceAgreement(price:PriceAgreementKeys): Promise<PriceAgreementDto>
 }
 

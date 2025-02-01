@@ -1,10 +1,11 @@
-import { UnitOfMeasure } from "../domain-enums/price-record-enums";
+import { UnitOfMeasure } from "../../pricing-module/domain-enums/price-record-enums";
+
 
 
 
 export interface OrderHeaderDTO{
-  orderID: number;  
-  customerID: number;
+  orderID: string;  
+  customerID: string;
   orderDate: string;
   billedQtyUom?:number;
   billedRevenue?:number;
@@ -13,7 +14,7 @@ export interface OrderHeaderDTO{
 }
 
 export interface OrderDetailDTO {
-  orderDetailID: number;  
+  orderDetailID: string;  
   orderID: string;  
   productID: string;
   containerID: string;
@@ -26,6 +27,11 @@ export interface OrderDetailDTO {
   billedPricePerGallon?:number;
 }
 
+
+export interface OrderDetailKeys {
+  orderDetailID: string;
+  orderID: string;
+}
 
 
 // OrderDTO combines OrderHeaderDTO and includes an additional details array

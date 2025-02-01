@@ -34,10 +34,12 @@ effectiveDate:string;
 effectiveTime:number;
 }
 
-export interface PriceAgreementDto {
+export interface PriceAgreementKeys {
+
+customerCode: string;
+location: string;
 productCode: string;
 containerCode: string;
-customerCode: string;
 customerShipTo?: string;
 startDate: number;
 endDate: number;
@@ -65,5 +67,44 @@ export interface ProductDto {
     lbsPerGallon?:number;
 
 }
-  
 
+
+
+export interface PriceAgreementDto {
+    delete: string;
+    companyCode: number;
+    customerCode: string;
+    location: string;
+    productCode: string;
+    startDate: number;
+    startTime: number;
+    endDate: number;
+    endTime: number;
+   // filler4: number;
+    price: string;
+   // filler5: number;
+    offRack: number;
+    minQuantity: number;
+    maxQuantity: number;
+    paymentPeriod: string;
+    allShipTo: string;
+   // filler1: string;
+    priceAtInventory: string;
+   // filler2: string;
+    startDate8Digit: number;
+    endDate8Digit: number;
+    delivery: string;
+    freightCode: string;
+    creationDate: number;
+    creationTime: number;
+    lastUpdateDate: number;
+    lastUpdateTime: number;
+    containerCode: string;
+    shipTo: string;
+    contractNumber: number;
+    unitMeasurement: string;
+    sequenceNumber: number;
+    purchaseOrder: number;
+    purchaseOrderOriginal: number;
+   // filler3: string;
+  }
