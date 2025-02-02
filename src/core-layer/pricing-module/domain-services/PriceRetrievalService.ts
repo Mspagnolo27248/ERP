@@ -30,7 +30,7 @@ export class PriceRetrievalService {
         
         if(filteredAgreements.length > 0) {
             return {
-                price: filteredAgreements[0].price,
+                price: parseFloat(String(filteredAgreements[0].price)),
                 unitOfMeasure: activeAgreements[0].unitMeasurement,
                 priceType: "Agreement"
             } as PriceDto;
@@ -46,10 +46,14 @@ export class PriceRetrievalService {
 
         //Remove prices with effective date greater than shipdate
         const filteredRackPrice = rackPrice.filter(price => parseInt(price.effectiveDate) < keys.shipDate);
+
+        if(filteredRackPrice.length > 0) {
+            throw new Error("No rack price found");
+        }
         //sort by effective date
         const sortedRackPrice = filteredRackPrice.sort((a, b) => parseInt(b.effectiveDate) - parseInt(a.effectiveDate));
         return {
-            price: sortedRackPrice[0].price,
+            price: parseFloat(String(sortedRackPrice[0].price)),
             unitOfMeasure: sortedRackPrice[0].unitOfMeasure,
             priceType: "Rack"
         } as PriceDto;
