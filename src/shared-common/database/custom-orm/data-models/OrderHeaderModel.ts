@@ -1,4 +1,4 @@
-import { OrderHeaderDTO } from "../../../../core-layer/pricing-module/data-transfer-objects/order-entry-dtos";
+import { OrderHeaderDTO } from "../../../../core-layer/order-entry/data-access-repository/order-entry-dtos";
 import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
 import { BaseModel } from "../orm/BaseModel";
 
@@ -6,10 +6,10 @@ import { BaseModel } from "../orm/BaseModel";
 export class OrderHeaderModel extends BaseModel implements OrderHeaderDTO{
     @KeyField
     @TableColumn('OrderID')
-    orderID: number = 0;  // Primary key
+    orderID: string = '';  // Primary key
     
     @TableColumn('CustomerID')
-    customerID: number = 0;
+    customerID: string = '';
     
     @TableColumn('OrderDate')
     orderDate: string = '';  // Can default to current date in actual usage

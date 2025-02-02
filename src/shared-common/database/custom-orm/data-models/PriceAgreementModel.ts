@@ -68,7 +68,7 @@ export class PriceAgreementModel extends BaseModel implements PriceAgreementDto 
     // filler4: number = 0.0;
 
     @TableColumn('BAPRCE') 
-    price: string = '';
+    price: number = 0;
 
     // @TableColumn('BAF005') 
     // filler5: number = 0.0;

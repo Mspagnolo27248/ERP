@@ -1,4 +1,5 @@
-import { CustomerDto } from "../data-transfer-objects/order-entry-dtos";
+import { CustomerDto } from "../../order-entry/data-access-repository/order-entry-dtos";
+
 
 
 export class Customer {

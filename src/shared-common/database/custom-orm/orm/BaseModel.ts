@@ -12,11 +12,18 @@ export class BaseModel {
   }
 
   static async findAll<T extends Record<string, any>>(
-    this: typeof BaseModel
+    this: typeof BaseModel,
+    filter?: Partial<T>
   ): Promise<any> {
     const tableName = this.getTableName();
+    let whereClause = "";
+    if(filter){
+      const whereFields = Object.keys(filter);
+    const modelToTableMapping = this.getModelToTableFieldMap();
+    whereClause = this.generateSqlWhereClause(whereFields,modelToTableMapping,filter);
+    }
     const db = this.connection;
-    const sql = `SELECT * FROM ${tableName}`;
+    const sql = `SELECT * FROM ${tableName} ${whereClause}`;
     const rawTableRecords = await this.tryExecuteDatabaseOperation(db, sql);
     const modelInstances = rawTableRecords.map((record: T) =>
       this.mapRecordToModel(record)

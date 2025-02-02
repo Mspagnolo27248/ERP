@@ -25,9 +25,9 @@ import { PricingRepository } from "./PricingRepository";
 export class PricingRepositoryImp  extends Repository implements PricingRepository {
 
 
-  async getAllRackPricing(): Promise<RackPriceDto[]> { 
+  async getAllRackPricing(where?:Partial<RackPriceDto>): Promise<RackPriceDto[]> { 
     try {     
-      return await RackPriceModel.findAll() as Promise<RackPriceDto[]>;  
+      return await RackPriceModel.findAll(where) as Promise<RackPriceDto[]>;  
     } catch (error) {
       this.thowInfrastuctureError(error);
     }
@@ -74,8 +74,12 @@ export class PricingRepositoryImp  extends Repository implements PricingReposito
   //   }
   // }
 
-  async getPriceAgreement(keys: PriceAgreementKeys): Promise<PriceAgreementDto> {
+  async getPriceAgreementByKey(keys: PriceAgreementKeys): Promise<PriceAgreementDto> {
     return await PriceAgreementModel.findByKey({ keys })
   }
 
+
+  async getAllPriceAgreements(where?:Partial<PriceAgreementDto>): Promise<PriceAgreementDto[]> {
+    return await PriceAgreementModel.findAll(where);
+  }
 }

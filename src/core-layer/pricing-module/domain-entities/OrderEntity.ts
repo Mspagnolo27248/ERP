@@ -1,4 +1,4 @@
-import { OrderDetailDTO, OrderDTO, OrderHeaderDTO } from "../data-transfer-objects/order-entry-dtos";
+import { OrderDetailDTO, OrderDTO, OrderHeaderDTO } from "../../order-entry/data-access-repository/order-entry-dtos";
 
 export class Order {
   private orderDTO: OrderDTO;
@@ -34,10 +34,10 @@ export class Order {
   }
 
   // Remove an order detail by orderDetailID
-  removeDetail(orderDetailID: number): void {
-      this.orderDTO.details = this.orderDTO.details.filter(detail => detail.orderDetailID !== orderDetailID);   
-      this.validateOrder();
-  }
+//   removeDetail(orderDetailID: number): void {
+//       this.orderDTO.details = this.orderDTO.details.filter(detail => detail.orderDetailID !== orderDetailID);   
+//       this.validateOrder();
+//   }
 
   // Get order header information
   getHeader(): OrderHeaderDTO {

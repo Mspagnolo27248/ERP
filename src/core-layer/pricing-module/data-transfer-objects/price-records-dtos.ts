@@ -26,12 +26,9 @@ export interface RackPriceDto {
 
 export interface RackPriceKeys
 {
-location:string
 productCode:string;
 containerCode:string;
 unitOfMeasure:string;
-effectiveDate:string;
-effectiveTime:number;
 }
 
 export interface PriceAgreementKeys {
@@ -40,9 +37,8 @@ customerCode: string;
 location: string;
 productCode: string;
 containerCode: string;
-customerShipTo?: string;
-startDate: number;
-endDate: number;
+unitMeasurement: string;
+
 }
 
 
@@ -81,7 +77,7 @@ export interface PriceAgreementDto {
     endDate: number;
     endTime: number;
    // filler4: number;
-    price: string;
+    price: number;
    // filler5: number;
     offRack: number;
     minQuantity: number;
@@ -91,8 +87,8 @@ export interface PriceAgreementDto {
    // filler1: string;
     priceAtInventory: string;
    // filler2: string;
-    startDate8Digit: number;
-    endDate8Digit: number;
+   startDate8Digit: number;
+   endDate8Digit: number;
     delivery: string;
     freightCode: string;
     creationDate: number;

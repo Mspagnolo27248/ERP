@@ -1,4 +1,5 @@
-import { CustomerShipToDTO } from "../../../../core-layer/pricing-module/data-transfer-objects/order-entry-dtos";
+
+import { CustomerShipToDTO } from "../../../../core-layer/order-entry/data-access-repository/order-entry-dtos";
 import { ARGModel, TableColumn } from "../orm-decorators";
 import { BaseModel } from "../orm/BaseModel";
 

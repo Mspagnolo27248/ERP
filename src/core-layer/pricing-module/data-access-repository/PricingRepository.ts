@@ -12,12 +12,13 @@ import {PriceAgreementDto, PriceAgreementKeys, ProductDto, RackPriceDto, RackPri
 
 
 export interface PricingRepository { 
-    getAllRackPricing(): Promise<RackPriceDto[]> ; 
+    getAllRackPricing(where?:Partial<RackPriceDto>): Promise<RackPriceDto[]> ; 
     getRackPriceByKey(keys:RackPriceKeys): Promise<RackPriceDto>;  
     getProductById(productId: string): Promise<ProductDto>; /*these would be in a master data repo here for simplicty*/ 
     getAllProducts(): Promise<ProductDto[]> 
     // upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto>
     // deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto>    
-    getPriceAgreement(price:PriceAgreementKeys): Promise<PriceAgreementDto>
+    getPriceAgreementByKey(price:PriceAgreementKeys): Promise<PriceAgreementDto>;
+    getAllPriceAgreements(where?:Partial<PriceAgreementDto>): Promise<PriceAgreementDto[]>;
 }
 

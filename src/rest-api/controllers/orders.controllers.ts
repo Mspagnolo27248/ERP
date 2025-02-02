@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { OrderRepositoryImp } from "../../core-layer/order-entry/data-access-repository/OrderEntryRepositoryImp";
-import { withHttpErrorHandling } from "../utility/error-handler";
+import { PricingRepositoryImp } from "../../core-layer/pricing-module/data-access-repository/PricingReposityoryImp";
+import { PriceRetrievalService } from "../../core-layer/pricing-module/domain-services/PriceRetrievalService";
+import { ConnectionManager } from "../../shared-common/database/custom-orm/orm/ConnectionManager";
+import path from "path";
 
 // export  class OrderController { 
 
@@ -14,11 +16,18 @@ import { withHttpErrorHandling } from "../utility/error-handler";
 // }   
 
 async function test(){  
-    const repository = new OrderRepositoryImp();
-    const order = await repository.getOrderHeader("997");
-    const orderDetails = await repository.getOrderDetails("997");
-    const orderFull = {order, orderDetails};
-    console.log(orderFull);
+    ConnectionManager.getInstance().configureConnection('sqlite', {database: path.join('./', 'database.sqlite')});
+    const pricingRepository = new PricingRepositoryImp();
+    const priceRetrievalService = new PriceRetrievalService(pricingRepository);
+    const price = await priceRetrievalService.execute({
+        productId: "4315",
+        containerId: "001",
+        unitOfMeasure: "GAL",
+        shipDate: 20250201,
+        customerId: '4450',
+        location: '001'
+    });
+    console.log(price);
 }
 
 test();
