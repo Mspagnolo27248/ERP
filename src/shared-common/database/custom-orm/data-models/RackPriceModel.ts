@@ -5,6 +5,8 @@ import { BaseModel } from "../orm/BaseModel";
 
 @ARGModel('GBBPRCE')
 export class RackPriceModel extends BaseModel implements RackPriceDto {
+
+    @KeyField
     @TableColumn('RKCONO')
     companyNumber: number = 0; // RKCONO, initialized with 0
 
@@ -33,7 +35,7 @@ export class RackPriceModel extends BaseModel implements RackPriceDto {
     effectiveTime: number = 0; // RKTIME, initialized with 0
 
     @TableColumn('RKPRCE')
-    price: number = 0; // RKPRCE, initialized with 0
+    price: number = 0.0; // RKPRCE, initialized with 0
 
     @TableColumn('RKPR02')
     priceTier1: string = ''; // RKPR02, initialized with empty string
