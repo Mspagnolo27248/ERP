@@ -4,9 +4,9 @@ import { PriceRetrievalService } from "../../core-layer/pricing-module/domain-se
 import { ConnectionManager } from "../../shared-common/database/custom-orm/orm/ConnectionManager";
 import path from "path";
 import { OrderRepositoryImp } from "../../core-layer/order-entry/data-access-repository/OrderEntryRepositoryImp";
-import { CreateOrderHeaderUseCase } from "../../core-layer/order-entry/use-cases/CreateOrderHeaderUseCase";
 import { CreateOrderDetailUseCase } from "../../core-layer/order-entry/use-cases/CreateOrderDetailUseCase";
 import { OrderDetailDTO, OrderHeaderDTO } from "../../core-layer/order-entry/data-access-repository/order-entry-dtos";
+import { MasterDataCacheImp } from "../../shared-common/data-cache/MasterDataCacheImp";
 
 // export  class OrderController { 
 
@@ -21,7 +21,7 @@ import { OrderDetailDTO, OrderHeaderDTO } from "../../core-layer/order-entry/dat
 
 async function test1(){  
    
-    const pricingRepository = new PricingRepositoryImp();
+    const pricingRepository = new PricingRepositoryImp(MasterDataCacheImp.getInstance());
     const priceRetrievalService = new PriceRetrievalService(pricingRepository);
     const price = await priceRetrievalService.execute({
         productId: "4315",
@@ -36,7 +36,7 @@ async function test1(){
 
 async function test2(){
     const orderRepository = new OrderRepositoryImp();
-    const pricingRepository = new PricingRepositoryImp();
+    const pricingRepository = new PricingRepositoryImp(MasterDataCacheImp.getInstance());
     const createOrderHeaderUseCase = new CreateOrderDetailUseCase(orderRepository,pricingRepository);
     
 

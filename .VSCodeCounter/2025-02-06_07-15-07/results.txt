@@ -1,0 +1,126 @@
+Date : 2025-02-06 07:15:07
+Directory : c:\Users\Mspag\Desktop\Projects- In-process\ERP\src
+Total : 66 files,  2626 codes, 291 comments, 815 blanks, all 3732 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| TypeScript |         66 |      2,626 |        291 |        815 |      3,732 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                    | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                       |         66 |      2,626 |        291 |        815 |      3,732 |
+| . (Files)                                                                                                                               |          3 |        283 |         10 |         11 |        304 |
+| core-layer                                                                                                                              |         29 |        954 |        154 |        276 |      1,384 |
+| core-layer\customer-module                                                                                                              |          2 |         34 |          3 |         10 |         47 |
+| core-layer\customer-module\data-access-repository                                                                                       |          2 |         34 |          3 |         10 |         47 |
+| core-layer\example-module                                                                                                               |          2 |          9 |          0 |          3 |         12 |
+| core-layer\example-module\data-access-repository                                                                                        |          2 |          9 |          0 |          3 |         12 |
+| core-layer\general                                                                                                                      |          4 |         38 |         17 |         27 |         82 |
+| core-layer\order-entry                                                                                                                  |          5 |        173 |          1 |         54 |        228 |
+| core-layer\order-entry\data-access-repository                                                                                           |          3 |        139 |          1 |         31 |        171 |
+| core-layer\order-entry\use-cases                                                                                                        |          2 |         34 |          0 |         23 |         57 |
+| core-layer\pricing-module                                                                                                               |         16 |        700 |        133 |        182 |      1,015 |
+| core-layer\pricing-module\data-access-repository                                                                                        |          2 |         65 |         40 |         27 |        132 |
+| core-layer\pricing-module\data-transfer-objects                                                                                         |          1 |         88 |          5 |         13 |        106 |
+| core-layer\pricing-module\domain-entities                                                                                               |          5 |        362 |         11 |         51 |        424 |
+| core-layer\pricing-module\domain-enums                                                                                                  |          1 |         18 |          0 |          1 |         19 |
+| core-layer\pricing-module\domain-services                                                                                               |          1 |         57 |          3 |         21 |         81 |
+| core-layer\pricing-module\use-cases                                                                                                     |          6 |        110 |         74 |         69 |        253 |
+| rest-api                                                                                                                                |          8 |        190 |         66 |         89 |        345 |
+| rest-api (Files)                                                                                                                        |          1 |          7 |         12 |          9 |         28 |
+| rest-api\controllers                                                                                                                    |          4 |        133 |         40 |         56 |        229 |
+| rest-api\routes                                                                                                                         |          2 |         15 |         12 |         13 |         40 |
+| rest-api\utility                                                                                                                        |          1 |         35 |          2 |         11 |         48 |
+| shared-common                                                                                                                           |         26 |      1,199 |         61 |        439 |      1,699 |
+| shared-common\data-cache                                                                                                                |          1 |         45 |          1 |         12 |         58 |
+| shared-common\database                                                                                                                  |         15 |        875 |         40 |        310 |      1,225 |
+| shared-common\database (Files)                                                                                                          |          1 |         10 |          0 |          1 |         11 |
+| shared-common\database\custom-orm                                                                                                       |         14 |        865 |         40 |        309 |      1,214 |
+| shared-common\database\custom-orm (Files)                                                                                               |          1 |         25 |          5 |         13 |         43 |
+| shared-common\database\custom-orm\data-models                                                                                           |         11 |        444 |         28 |        223 |        695 |
+| shared-common\database\custom-orm\orm                                                                                                   |          2 |        396 |          7 |         73 |        476 |
+| shared-common\dependency-injection                                                                                                      |          6 |         77 |          5 |         36 |        118 |
+| shared-common\dependency-injection (Files)                                                                                              |          3 |         45 |          3 |         24 |         72 |
+| shared-common\dependency-injection\module-registrations                                                                                 |          3 |         32 |          2 |         12 |         46 |
+| shared-common\middlewares                                                                                                               |          1 |          8 |          2 |          2 |         12 |
+| shared-common\services                                                                                                                  |          3 |        194 |         13 |         79 |        286 |
+| shared-common\services\helper-functions                                                                                                 |          3 |        194 |         13 |         79 |        286 |
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                                                | language   | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\customer-module\data-access-repository\CustomerRepository.ts             | TypeScript |          5 |          3 |          4 |         12 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\customer-module\data-access-repository\CustomerRepositoryImp.ts          | TypeScript |         29 |          0 |          6 |         35 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\example-module\data-access-repository\Repository.ts                      | TypeScript |          3 |          0 |          1 |          4 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\example-module\data-access-repository\RepositoryImp.ts                   | TypeScript |          6 |          0 |          2 |          8 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\general\Entity.ts                                                        | TypeScript |         15 |          9 |          8 |         32 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\general\MasterDataCache.ts                                               | TypeScript |          6 |          0 |          2 |          8 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\general\Repository.ts                                                    | TypeScript |          7 |          0 |          7 |         14 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\general\UseCase.ts                                                       | TypeScript |         10 |          8 |         10 |         28 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\order-entry\data-access-repository\OrderEntryRepository.ts               | TypeScript |          6 |          0 |          1 |          7 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\order-entry\data-access-repository\OrderEntryRepositoryImp.ts            | TypeScript |         35 |          0 |         15 |         50 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\order-entry\data-access-repository\order-entry-dtos.ts                   | TypeScript |         98 |          1 |         15 |        114 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\order-entry\use-cases\CreateOrderDetailUseCase.ts                        | TypeScript |         25 |          0 |         16 |         41 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\order-entry\use-cases\CreateOrderHeaderUseCase.ts                        | TypeScript |          9 |          0 |          7 |         16 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\data-access-repository\PricingRepository.ts               | TypeScript |          9 |          9 |          7 |         25 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\data-access-repository\PricingReposityoryImp.ts           | TypeScript |         56 |         31 |         20 |        107 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\data-transfer-objects\price-records-dtos.ts               | TypeScript |         88 |          5 |         13 |        106 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\domain-entities\Customer.ts                               | TypeScript |        113 |          0 |          5 |        118 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\domain-entities\OrderEntity.ts                            | TypeScript |         42 |          9 |         15 |         66 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\domain-entities\PriceAgreement.ts                         | TypeScript |         69 |          1 |         18 |         88 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\domain-entities\Product.ts                                | TypeScript |         70 |          1 |          6 |         77 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\domain-entities\RackPrice.ts                              | TypeScript |         68 |          0 |          7 |         75 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\domain-enums\price-record-enums.ts                        | TypeScript |         18 |          0 |          1 |         19 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\domain-services\PriceRetrievalService.ts                  | TypeScript |         57 |          3 |         21 |         81 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\use-cases\CreateRackPriceUseCase.ts                       | TypeScript |          0 |         60 |         23 |         83 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\use-cases\DeleteRackPriceUseCase.ts                       | TypeScript |          0 |         10 |          7 |         17 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\use-cases\GetProductByIdUseCase.ts                        | TypeScript |         22 |          0 |          7 |         29 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\use-cases\GetProductsUseCase.ts                           | TypeScript |         20 |          0 |          7 |         27 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\use-cases\GetRackPriceByKeyUseCase.ts                     | TypeScript |         21 |          0 |          4 |         25 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\core-layer\pricing-module\use-cases\GetRackPricingUseCase.ts                        | TypeScript |         47 |          4 |         21 |         72 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\rest-api\controllers\admin.controller.ts                                            | TypeScript |         12 |          0 |          1 |         13 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\rest-api\controllers\orders.controllers.ts                                          | TypeScript |         42 |          8 |         13 |         63 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\rest-api\controllers\products-controller.ts                                         | TypeScript |         41 |          0 |          8 |         49 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\rest-api\controllers\rack-price-controller.ts                                       | TypeScript |         38 |         32 |         34 |        104 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\rest-api\router.ts                                                                  | TypeScript |          7 |         12 |          9 |         28 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\rest-api\routes\products-routes.ts                                                  | TypeScript |          9 |          0 |          8 |         17 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\rest-api\routes\rack-price.routes.ts                                                | TypeScript |          6 |         12 |          5 |         23 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\rest-api\utility\error-handler.ts                                                   | TypeScript |         35 |          2 |         11 |         48 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\server.ts                                                                           | TypeScript |         29 |          7 |          7 |         43 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\data-cache\MasterDataCacheImp.ts                                      | TypeScript |         45 |          1 |         12 |         58 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\BlendRequirementModel.ts              | TypeScript |         17 |          0 |          6 |         23 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\CustomerModel.ts                      | TypeScript |        114 |          0 |         58 |        172 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\CustomerShipToModel.ts                | TypeScript |         28 |          0 |         15 |         43 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\GGSCTUM.ts                            | TypeScript |         27 |          0 |         12 |         39 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\GGSCTWT.ts                            | TypeScript |         23 |          0 |         10 |         33 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\GGSUMCV.ts                            | TypeScript |         21 |          0 |          9 |         30 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\OrderDetail.ts                        | TypeScript |         24 |          0 |         14 |         38 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\OrderHeaderModel.ts                   | TypeScript |         19 |          0 |          8 |         27 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\PriceAgreementModel.ts                | TypeScript |         75 |         28 |         49 |        152 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\ProductModel.ts                       | TypeScript |         43 |          0 |         19 |         62 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\data-models\RackPriceModel.ts                     | TypeScript |         53 |          0 |         23 |         76 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\orm-decorators.ts                                 | TypeScript |         25 |          5 |         13 |         43 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\orm\BaseModel.ts                                  | TypeScript |        271 |          3 |         43 |        317 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\custom-orm\orm\ConnectionManager.ts                          | TypeScript |        125 |          4 |         30 |        159 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\database\sqlite.ts                                                    | TypeScript |         10 |          0 |          1 |         11 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\dependency-injection\DependencyContainer.ts                           | TypeScript |         17 |          3 |          8 |         28 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\dependency-injection\container-types.ts                               | TypeScript |         19 |          0 |          5 |         24 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\dependency-injection\module-registrations\order-entry-dependencies.ts | TypeScript |         10 |          0 |          4 |         14 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\dependency-injection\module-registrations\pricing-dependencies.ts     | TypeScript |         22 |          2 |          7 |         31 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\dependency-injection\module-registrations\testit.ts                   | TypeScript |          0 |          0 |          1 |          1 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\dependency-injection\register-dependencies.ts                         | TypeScript |          9 |          0 |         11 |         20 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\middlewares\authMiddlewre.ts                                          | TypeScript |          8 |          2 |          2 |         12 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\services\helper-functions\data-utils.ts                               | TypeScript |         88 |          0 |         32 |        120 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\services\helper-functions\object-mainpulation.ts                      | TypeScript |        103 |         13 |         45 |        161 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\shared-common\services\helper-functions\utilites.ts                                 | TypeScript |          3 |          0 |          2 |          5 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\swaggerComponents.ts                                                                | TypeScript |        231 |          3 |          1 |        235 |
+| c:\Users\Mspag\Desktop\Projects- In-process\ERP\src\swaggerConfig.ts                                                                    | TypeScript |         23 |          0 |          3 |         26 |
+| Total                                                                                                                                   |            |      2,626 |        291 |        815 |      3,732 |
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

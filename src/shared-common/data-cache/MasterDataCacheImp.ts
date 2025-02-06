@@ -1,20 +1,25 @@
+import { MasterDataCache } from "../../core-layer/general/MasterDataCache";
+
+
+
+
 type CacheEntry<T> = {
   data: T[];
   lastUpdated: Date;
 };
 
-export class MasterDataCache {
-  private static instance: MasterDataCache;
+  export class MasterDataCacheImp implements MasterDataCache {
+  private static instance: MasterDataCacheImp;
   private cacheMap: Map<string, CacheEntry<any>> = new Map();
   private cacheDuration: number = 1000 * 60 * 60; // 1 hour default
 
   private constructor() {}
 
-  static getInstance(): MasterDataCache {
-    if (!MasterDataCache.instance) {
-      MasterDataCache.instance = new MasterDataCache();
+  static getInstance(): MasterDataCacheImp {
+    if (!MasterDataCacheImp.instance) {
+      MasterDataCacheImp.instance = new MasterDataCacheImp();
     }
-    return MasterDataCache.instance;
+    return MasterDataCacheImp.instance;
   }
 
   setCacheDuration(milliseconds: number) {

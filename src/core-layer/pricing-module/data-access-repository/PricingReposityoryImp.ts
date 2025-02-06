@@ -1,10 +1,12 @@
 import { PriceAgreementModel } from "../../../shared-common/database/custom-orm/data-models/PriceAgreementModel";
 import { ProductModel } from "../../../shared-common/database/custom-orm/data-models/ProductModel";
 import { RackPriceModel } from "../../../shared-common/database/custom-orm/data-models/RackPriceModel";
+import { MasterDataCache } from "../../general/MasterDataCache";
 import { Repository } from "../../general/Repository";
 import { PriceAgreementDto, PriceAgreementKeys, ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 import { PricingRepository } from "./PricingRepository";
-import { MasterDataCache } from "../../../shared-common/data-cache/MasterDataCache";
+
+
 
 // Repository Implementation Responsibilities:
 // 1. **Abstract Database Interactions**: The repository implementation is responsible for interacting directly with the database or ORM layer. 
@@ -24,7 +26,12 @@ import { MasterDataCache } from "../../../shared-common/data-cache/MasterDataCac
 
 
 export class PricingRepositoryImp  extends Repository implements PricingRepository {
-  private cache = MasterDataCache.getInstance();
+  private cache:MasterDataCache;
+
+  constructor(cache: MasterDataCache) {
+    super();
+    this.cache = cache;
+  }
 
   async getAllRackPricing(where?:Partial<RackPriceDto>): Promise<RackPriceDto[]> { 
     try {     

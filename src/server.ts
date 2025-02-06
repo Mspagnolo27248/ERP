@@ -8,7 +8,8 @@ import swaggerUi from 'swagger-ui-express';
 import { registerDependencies } from "./shared-common/dependency-injection/register-dependencies";
 import { ConnectionManager } from "./shared-common/database/custom-orm/orm/ConnectionManager";
 import path from 'path';
-import { MasterDataCache } from "./shared-common/data-cache/MasterDataCache";
+import { MasterDataCacheImp } from "./shared-common/data-cache/MasterDataCacheImp";
+
 
 
 dotenv.config();
@@ -24,7 +25,7 @@ app.use((req, res, next) => {
 
 
 // Initialize cache singelton for injection.
-MasterDataCache.getInstance().setCacheDuration(1000 * 60 * 60); // 1 hour cache
+MasterDataCacheImp.getInstance().setCacheDuration(1000 * 60 * 60); // 1 hour cache
 
 // Register dependencies
 registerDependencies();

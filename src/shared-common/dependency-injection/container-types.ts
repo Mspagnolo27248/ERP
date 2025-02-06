@@ -1,24 +1,16 @@
-import { OrderRepository } from "../../core-layer/example-module/data-access-repository/Repository";
-import { PricingRepository } from "../../core-layer/pricing-module/data-access-repository/PricingRepository";
-import { GetProductByIdUseCase } from "../../core-layer/pricing-module/use-cases/GetProductByIdUseCase";
-import { GetProductUseCase } from "../../core-layer/pricing-module/use-cases/GetProductsUseCase";
-import { GetRackPriceByKeyUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPriceByKeyUseCase";
-import { GetRackPricingUseCase } from "../../core-layer/pricing-module/use-cases/GetRackPricingUseCase";
 
- type PricingModuleContainerTypes = {
-    PricingRepository: PricingRepository,
-    GetProductByIdUseCase: GetProductByIdUseCase,
-    GetProductUseCase: GetProductUseCase,
-    GetRackPricingUseCase: GetRackPricingUseCase,
-    GetRackPriceByKeyUseCase: GetRackPriceByKeyUseCase,
-  };
+import { MasterDataCache } from "../../core-layer/general/MasterDataCache";
+import { OrderModuleContainerTypes } from "./module-registrations/order-entry-dependencies";
+import { PricingModuleContainerTypes } from "./module-registrations/pricing-dependencies";
 
-
-  type OrderModuleContainerTypes = {
-    OrderRepository: OrderRepository
-  };
+ 
+ type DataCache = {
+    MasterDataCache: MasterDataCache
+}
+// 
 
 
   export type DependencyContainerTypes = 
+  DataCache & 
   PricingModuleContainerTypes & 
   OrderModuleContainerTypes
