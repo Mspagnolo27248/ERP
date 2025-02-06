@@ -4,6 +4,7 @@ import { RackPriceModel } from "../../../shared-common/database/custom-orm/data-
 import { Repository } from "../../general/Repository";
 import { PriceAgreementDto, PriceAgreementKeys, ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 import { PricingRepository } from "./PricingRepository";
+import { MasterDataCache } from "../../../shared-common/data-cache/MasterDataCache";
 
 // Repository Implementation Responsibilities:
 // 1. **Abstract Database Interactions**: The repository implementation is responsible for interacting directly with the database or ORM layer. 
@@ -23,7 +24,7 @@ import { PricingRepository } from "./PricingRepository";
 
 
 export class PricingRepositoryImp  extends Repository implements PricingRepository {
-
+  private cache = MasterDataCache.getInstance();
 
   async getAllRackPricing(where?:Partial<RackPriceDto>): Promise<RackPriceDto[]> { 
     try {     
@@ -45,12 +46,27 @@ export class PricingRepositoryImp  extends Repository implements PricingReposito
 
 
   async getProductById(productId: string): Promise<ProductDto> {
-      return await ProductModel.findByKey({ productId })
+    try {
+      const products = await this.getAllProducts();
+      const product = products.find(p => p.productId === productId);
+      if (!product) {
+        throw new Error(`Product not found with ID: ${productId}`);
+      }
+      return product;
+    } catch (error) {
+      this.thowInfrastuctureError(error);
+    }
   }
 
 
   async getAllProducts(): Promise<ProductDto[]> {
-      return await ProductModel.findAll();  
+    try {
+      return await this.cache.getOrFetch('products', async () => {
+        return await ProductModel.findAll();
+      });
+    } catch (error) {
+      this.thowInfrastuctureError(error);
+    }
   }
 
     // async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {

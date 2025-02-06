@@ -8,6 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import { registerDependencies } from "./shared-common/dependency-injection/register-dependencies";
 import { ConnectionManager } from "./shared-common/database/custom-orm/orm/ConnectionManager";
 import path from 'path';
+import { MasterDataCache } from "./shared-common/data-cache/MasterDataCache";
 
 
 dotenv.config();
@@ -21,12 +22,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware to parse JSON request bodies globally
-registerDependencies();//Register Dependacy Injection Container
+
+// Initialize cache singelton for injection.
+MasterDataCache.getInstance().setCacheDuration(1000 * 60 * 60); // 1 hour cache
+
+// Register dependencies
+registerDependencies();
 ConnectionManager.getInstance().configureConnection('sqlite', {database: path.join('./', 'database.sqlite')});
 // ConnectionManager.getInstance().configureConnection('odbc',
 //   { connectionString: 'Driver={SQL Server Native Client 11.0};Server=(local);Database=InventoryPlanningModel;UID=mstest;PWD=mstest;'}
 // )
+
+// Middleware to parse JSON request bodies globally
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ limit: '2mb', extended: true }));
 app.use('/', router);
