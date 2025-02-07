@@ -54,8 +54,9 @@ export class PricingRepositoryImp  extends Repository implements PricingReposito
 
   async getProductById(productId: string): Promise<ProductDto> {
     try {
-      const products = await this.getAllProducts();
-      const product = products.find(p => p.productId === productId);
+      const product = await this.cache.getOrFetchByKeys({ productId }, async () => {
+        return await ProductModel.findByKey({ productId });
+      }) as ProductDto;
       if (!product) {
         throw new Error(`Product not found with ID: ${productId}`);
       }

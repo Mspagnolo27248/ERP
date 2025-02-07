@@ -116,7 +116,7 @@ export class BaseModel {
     return Reflect.get(this, "tableName");
   }
 
-  protected static getKeyFields<T>(this: typeof BaseModel): (keyof T)[] {
+  public static getKeyFields<T>(this: typeof BaseModel): (keyof T)[] {
     return Reflect.get(this.prototype, "keyFields") as (keyof T)[];
   }
 

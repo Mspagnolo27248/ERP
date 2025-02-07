@@ -50,6 +50,27 @@ type CacheEntry<T> = {
     return freshData;
   }
 
+  async getOrFetchByKeys<T>(
+    keyFields: Record<string, any>,
+    fetchFn: () => Promise<T>
+  ): Promise<T> {
+    const cacheKey = JSON.stringify(keyFields);
+    const cached = this.cacheMap.get(cacheKey);
+    const now = new Date();
+
+    if (cached && now.getTime() - cached.lastUpdated.getTime() < this.cacheDuration) {
+      return cached.data[0];
+    }
+
+    const freshData = await fetchFn();
+    this.cacheMap.set(cacheKey, {
+      data: [freshData],
+      lastUpdated: now,
+    });
+
+    return freshData;
+  }
+
   invalidateCache(key: string) {
     this.cacheMap.delete(key);
   }
