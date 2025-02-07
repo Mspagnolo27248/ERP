@@ -3,7 +3,7 @@ import { ProductModel } from "../../../shared-common/database/custom-orm/data-mo
 import { RackPriceModel } from "../../../shared-common/database/custom-orm/data-models/RackPriceModel";
 import { MasterDataCache } from "../../general/MasterDataCache";
 import { Repository } from "../../general/Repository";
-import { PriceAgreementDto, PriceAgreementKeys, ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
+import { PriceAgreementDto, PriceAgreementKeys, ProductDto, RackPriceDto, RackPriceKeys } from "../data-transfer-objects/price-records-dtos";
 import { PricingRepository } from "./PricingRepository";
 
 
@@ -25,85 +25,123 @@ import { PricingRepository } from "./PricingRepository";
 
 
 
-export class PricingRepositoryImp  extends Repository implements PricingRepository {
-  private cache:MasterDataCache;
+export class PricingRepositoryImp extends Repository implements PricingRepository {
+  private cache: MasterDataCache;
+  private static readonly TABLES = {
+    PRODUCTS: 'products',
+    RACK_PRICES: 'rackPrices',
+    PRICE_AGREEMENTS: 'priceAgreements'
+  };
 
   constructor(cache: MasterDataCache) {
     super();
     this.cache = cache;
   }
 
-  async getAllRackPricing(where?:Partial<RackPriceDto>): Promise<RackPriceDto[]> { 
-    try {     
-      return await RackPriceModel.findAll(where) as Promise<RackPriceDto[]>;  
-    } catch (error) {
-      this.thowInfrastuctureError(error);
-    }
-  
-  }
-
-
-  async getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto> { 
+  async getAllRackPricing(where?: Partial<RackPriceDto>): Promise<RackPriceDto[]> {
     try {
-      return await RackPriceModel.findByKey(keys);   
+      if (!where) {
+        // If no filters, use cached table data
+        const cachedData = await this.cache.getTable<RackPriceDto>(
+          PricingRepositoryImp.TABLES.RACK_PRICES,
+          async () => {
+            const records = await RackPriceModel.findAll();
+            // Convert array to Record with ID as key
+            return records.reduce((acc, record) => {
+              const key = this.createRackPriceKey(record as RackPriceDto);
+              acc[key] = record as RackPriceDto;
+              return acc;
+            }, {} as Record<string, RackPriceDto>);
+          }
+        );
+        return Object.values(cachedData);
+      }
+      
+      // If there are filters, bypass cache
+      return await RackPriceModel.findAll(where);
     } catch (error) {
       this.thowInfrastuctureError(error);
     }
   }
 
+  private createRackPriceKey(rackPrice: RackPriceDto | RackPriceKeys): string {
+    // Create a unique key based on the rack price's identifying fields
+    return `${rackPrice.productCode}-${rackPrice.containerCode}-${rackPrice.unitOfMeasure}`;
+  }
+
+  async getRackPriceByKey(keys: Partial<RackPriceDto>): Promise<RackPriceDto> {
+    try {
+      const cacheKey = this.createRackPriceKey(keys as RackPriceKeys);
+      return await this.cache.getRecord<RackPriceDto>(
+        PricingRepositoryImp.TABLES.RACK_PRICES,
+        cacheKey,
+        async () => await RackPriceModel.findByKey(keys)
+      );
+    } catch (error) {
+      this.thowInfrastuctureError(error);
+    }
+  }
 
   async getProductById(productId: string): Promise<ProductDto> {
     try {
-      const product = await this.cache.getOrFetchByKeys({ productId }, async () => {
-        return await ProductModel.findByKey({ productId });
-      }) as ProductDto;
-      if (!product) {
-        throw new Error(`Product not found with ID: ${productId}`);
-      }
-      return product;
+      return await this.cache.getRecord<ProductDto>(
+        PricingRepositoryImp.TABLES.PRODUCTS,
+        productId,
+        async () => {
+          const product = await ProductModel.findByKey({ productId });
+          if (!product) {
+            throw new Error(`Product not found with ID: ${productId}`);
+          }
+          return product;
+        }
+      );
     } catch (error) {
       this.thowInfrastuctureError(error);
     }
   }
-
 
   async getAllProducts(): Promise<ProductDto[]> {
     try {
-      return await this.cache.getOrFetch('products', async () => {
-        return await ProductModel.findAll();
-      });
+      const cachedData = await this.cache.getTable<ProductDto>(
+        PricingRepositoryImp.TABLES.PRODUCTS,
+        async () => {
+          const products = await ProductModel.findAll();
+          return products.reduce((acc, product) => {
+            acc[product.productId] = product as ProductDto;
+            return acc;
+          }, {} as Record<string, ProductDto>);
+        }
+      );
+      return Object.values(cachedData);
     } catch (error) {
       this.thowInfrastuctureError(error);
     }
   }
 
-    // async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {
-  //   try {
-  //     const results = await RackPriceModel.upsert(rackPriceDto);
-  //     return results;
-  //   } catch (error) {
-  //     throw new Error(JSON.stringify(error));
-  //   }
-  // }
-
-
-    // async deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> {
-  //   try {
-  //     return await RackPriceModel.delete(instance);
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       throw new Error(`Error executing getAllRackPricing() ${error.message}`);
-  //     }
-  //     throw new Error("Error executing getAllRackPricing()");
-  //   }
-  // }
-
   async getPriceAgreementByKey(keys: PriceAgreementKeys): Promise<PriceAgreementDto> {
-    return await PriceAgreementModel.findByKey({ keys })
+    const cacheKey = `${keys.customerCode}-${keys.productCode}`;
+    return await this.cache.getRecord<PriceAgreementDto>(
+      PricingRepositoryImp.TABLES.PRICE_AGREEMENTS,
+      cacheKey,
+      async () => await PriceAgreementModel.findByKey(keys)
+    );
   }
 
-
-  async getAllPriceAgreements(where?:Partial<PriceAgreementDto>): Promise<PriceAgreementDto[]> {
+  async getAllPriceAgreements(where?: Partial<PriceAgreementDto>): Promise<PriceAgreementDto[]> {
+    if (!where) {
+      const cachedData = await this.cache.getTable<PriceAgreementDto>(
+        PricingRepositoryImp.TABLES.PRICE_AGREEMENTS,
+        async () => {
+          const agreements = await PriceAgreementModel.findAll();
+          return agreements.reduce((acc, agreement) => {
+            const key = `${agreement.customerCode}-${agreement.productCode}`;
+            acc[key] = agreement as PriceAgreementDto;
+            return acc;
+          }, {} as Record<string, PriceAgreementDto>);
+        }
+      );
+      return Object.values(cachedData);
+    }
     return await PriceAgreementModel.findAll(where);
   }
 }

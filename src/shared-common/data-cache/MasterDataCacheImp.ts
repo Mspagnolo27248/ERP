@@ -1,14 +1,11 @@
 import { MasterDataCache } from "../../core-layer/general/MasterDataCache";
 
-
-
-
 type CacheEntry<T> = {
-  data: T[];
+  data: Record<string, T>;
   lastUpdated: Date;
 };
 
-  export class MasterDataCacheImp implements MasterDataCache {
+export class MasterDataCacheImp implements MasterDataCache {
   private static instance: MasterDataCacheImp;
   private cacheMap: Map<string, CacheEntry<any>> = new Map();
   private cacheDuration: number = 1000 * 60 * 60; // 1 hour default
@@ -22,27 +19,23 @@ type CacheEntry<T> = {
     return MasterDataCacheImp.instance;
   }
 
-  setCacheDuration(milliseconds: number) {
+  setCacheDuration(milliseconds: number): void {
     this.cacheDuration = milliseconds;
   }
 
-  async getOrFetch<T>(
-    key: string,
-    fetchFn: () => Promise<T[]>
-  ): Promise<T[]> {
-    const cached = this.cacheMap.get(key);
+  async getTable<T>(
+    tableName: string,
+    fetchFn: () => Promise<Record<string, T>>
+  ): Promise<Record<string, T>> {
+    const cached = this.cacheMap.get(tableName);
     const now = new Date();
 
-    if (
-      cached &&
-      now.getTime() - cached.lastUpdated.getTime() < this.cacheDuration
-    ) {
+    if (cached && now.getTime() - cached.lastUpdated.getTime() < this.cacheDuration) {
       return cached.data;
     }
 
-    // Fetch fresh data
     const freshData = await fetchFn();
-    this.cacheMap.set(key, {
+    this.cacheMap.set(tableName, {
       data: freshData,
       lastUpdated: now,
     });
@@ -50,32 +43,41 @@ type CacheEntry<T> = {
     return freshData;
   }
 
-  async getOrFetchByKeys<T>(
-    keyFields: Record<string, any>,
+  async getRecord<T>(
+    tableName: string,
+    key: string,
     fetchFn: () => Promise<T>
   ): Promise<T> {
-    const cacheKey = JSON.stringify(keyFields);
-    const cached = this.cacheMap.get(cacheKey);
+    const cached = this.cacheMap.get(tableName);
     const now = new Date();
 
     if (cached && now.getTime() - cached.lastUpdated.getTime() < this.cacheDuration) {
-      return cached.data[0];
+      const record = cached.data[key];
+      if (record !== undefined) {
+        return record;
+      }
     }
 
     const freshData = await fetchFn();
-    this.cacheMap.set(cacheKey, {
-      data: [freshData],
-      lastUpdated: now,
-    });
+    
+    if (!cached) {
+      this.cacheMap.set(tableName, {
+        data: { [key]: freshData },
+        lastUpdated: now,
+      });
+    } else {
+      cached.data[key] = freshData;
+      cached.lastUpdated = now;
+    }
 
     return freshData;
   }
 
-  invalidateCache(key: string) {
-    this.cacheMap.delete(key);
+  invalidateTable(tableName: string): void {
+    this.cacheMap.delete(tableName);
   }
 
-  invalidateAllCaches() {
+  invalidateAll(): void {
     this.cacheMap.clear();
   }
 } 

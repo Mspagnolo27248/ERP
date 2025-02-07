@@ -11,32 +11,33 @@ export class BaseModel {
     return this.connectionManager.getConnection();
   }
 
+  
   static async findAll<T extends Record<string, any>>(
-    this: typeof BaseModel,
+    this: (new () => T) & typeof BaseModel,
     filter?: Partial<T>
-  ): Promise<any> {
+  ): Promise<T[]> {
     const tableName = this.getTableName();
     let whereClause = "";
     if(filter){
-      const whereFields = Object.keys(filter);
-    const modelToTableMapping = this.getModelToTableFieldMap();
-    whereClause = this.generateSqlWhereClause(whereFields,modelToTableMapping,filter);
+      const whereFields = Object.keys(filter) as (keyof T)[];
+      const modelToTableMapping = this.getModelToTableFieldMap();
+      whereClause = this.generateSqlWhereClause(whereFields,modelToTableMapping,filter);
     }
     const db = this.connection;
     const sql = `SELECT * FROM ${tableName} ${whereClause}`;
     const rawTableRecords = await this.tryExecuteDatabaseOperation(db, sql);
-    const modelInstances = rawTableRecords.map((record: T) =>
-      this.mapRecordToModel(record)
+    const modelInstances = rawTableRecords.map((record: Record<string, any>) =>
+      this.mapRecordToModel<T>(record)
     );
     return modelInstances;
   }
 
-  static async findByKey<M extends Record<string, any>>(
-    this: typeof BaseModel,
-    filters: Partial<M>
-  ): Promise<any> {
+  static async findByKey<T extends Record<string, any>>(
+    this: (new () => T) & typeof BaseModel,
+    filters: Partial<T>
+  ): Promise<T> {
     const tableName = this.getTableName();
-    const keyFields: (keyof M)[] = this.getKeyFields();
+    const keyFields: (keyof T)[] = this.getKeyFields();
     this.verifyAllKeyFieldsArePassedByFilter(keyFields, filters);
     const modelToTableMapping = this.getModelToTableFieldMap();   
     const whereClause = this.generateSqlWhereClause(keyFields,modelToTableMapping,filters);
@@ -45,10 +46,10 @@ export class BaseModel {
     const db = this.connection;
     const tableRecords = await this.tryExecuteDatabaseOperation(db, sql);
 
-    const modelInstances:M[] = tableRecords.map((record:Record<string, any>) =>
-      this.mapRecordToModel(record)
+    const modelInstances = tableRecords.map((record: Record<string, any>) =>
+      this.mapRecordToModel<T>(record)
     );
-    return modelInstances[0]; // Return the first matching instance
+    return modelInstances[0]; // Return the first matching instance or undefined if none found
   }
 
   static async delete<T extends Record<string, any>>(instance: T): Promise<T> {
