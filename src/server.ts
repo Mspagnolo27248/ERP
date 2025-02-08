@@ -29,7 +29,8 @@ MasterDataCacheImp.getInstance().setCacheDuration(1000 * 60 * 60); // 1 hour cac
 
 // Register dependencies
 registerDependencies();
-ConnectionManager.getInstance().configureConnection('sqlite', {database: path.join('./', 'database.sqlite')});
+getConnection();
+// ConnectionManager.getInstance().configureConnection('sqlite', {database: path.join('./', 'database.sqlite')});
 // ConnectionManager.getInstance().configureConnection('odbc',
 //   { connectionString: 'Driver={SQL Server Native Client 11.0};Server=(local);Database=InventoryPlanningModel;UID=mstest;PWD=mstest;'}
 // )
@@ -42,3 +43,11 @@ app.use('/', router);
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
+
+async function getConnection() {
+  await ConnectionManager.getInstance().configureConnection('odbc',
+    { connectionString: 
+'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;' }
+  );
+}
+

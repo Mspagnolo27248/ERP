@@ -102,6 +102,7 @@ class SQLiteConnection implements DatabaseConnection {
     }
   }
 
+  
   async executeQuery(query: string, params: any[] = []): Promise<any> {
     if (!this.db) {
       throw new Error("SQLite database is not connected.");

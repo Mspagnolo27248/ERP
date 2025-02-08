@@ -6,10 +6,11 @@ async function main() {
     try {
         // Configure connection first
         await ConnectionManager.getInstance().configureConnection('odbc',
-            { connectionString: 'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;' }
+            { connectionString: 
+    'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;' }
         );
 
-        // Then run the test
+        // Then run the test    
         const results = await test();
         console.log('Test results:', results);
     } catch (error) {
@@ -71,7 +72,11 @@ async function test() {
         console.log('Transaction committed');
         return 'success';
     } catch (error) {
-        console.error('Error in test:', error);
+        if ((error as any).odbcErrors) {
+            console.error('Error in test:', (error as any).odbcErrors);
+        } else {
+            console.error('Error in test:', error);
+        }
         await BaseModel.rollbackTransaction();
         throw error;
     }
