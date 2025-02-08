@@ -1,6 +1,7 @@
 export class ConnectionManager {
     private static instance: ConnectionManager;
     private connection: DatabaseConnection | null = null;
+    private isConnected: boolean = false;
 
     private constructor() { }
 
@@ -11,7 +12,13 @@ export class ConnectionManager {
         return ConnectionManager.instance;
     }
 
-    configureConnection(type: 'sqlite' | 'mssql' | 'odbc', options: any): void {
+    async configureConnection(type: 'sqlite' | 'mssql' | 'odbc', options: any): Promise<void> {
+        // If already connected, disconnect first
+        if (this.isConnected && this.connection) {
+            await this.connection.disconnect();
+            this.isConnected = false;
+        }
+
         switch (type) {
             case 'sqlite':
                 this.connection = new SQLiteConnection(options);
@@ -25,13 +32,30 @@ export class ConnectionManager {
             default:
                 throw new Error('Unsupported database type.');
         }
+
+        // Establish the connection immediately
+        await this.connection.connect();
+        this.isConnected = true;
     }
 
-    getConnection(): DatabaseConnection {
+    async getConnection(): Promise<DatabaseConnection> {
         if (!this.connection) {
             throw new Error('Database connection is not configured.');
         }
+
+        if (!this.isConnected) {
+            await this.connection.connect();
+            this.isConnected = true;
+        }
+
         return this.connection;
+    }
+
+    async closeConnection(): Promise<void> {
+        if (this.connection && this.isConnected) {
+            await this.connection.disconnect();
+            this.isConnected = false;
+        }
     }
 }
 
@@ -40,6 +64,9 @@ export interface DatabaseConnection {
     disconnect(): Promise<void>;
     executeQuery(query: string, params?: any[]): Promise<any>;
     tryTransaction(statements: string[]): Promise<void>;
+    beginTransaction(): Promise<void>;
+    commitTransaction(): Promise<void>;
+    rollbackTransaction(): Promise<void>;
 }
 
 
@@ -52,6 +79,7 @@ import { open, Database } from 'sqlite';
 class SQLiteConnection implements DatabaseConnection {
   private db: Database | null = null;
   private readonly options: { database: string };
+  private inTransaction: boolean = false;
 
   constructor(options: { database: string }) {
     this.options = options;
@@ -107,6 +135,39 @@ class SQLiteConnection implements DatabaseConnection {
       throw error;
     }
   }
+
+  async beginTransaction(): Promise<void> {
+    if (!this.db) {
+      throw new Error("SQLite database is not connected.");
+    }
+    if (this.inTransaction) {
+      throw new Error("Transaction already in progress.");
+    }
+    await this.db.exec("BEGIN TRANSACTION");
+    this.inTransaction = true;
+  }
+
+  async commitTransaction(): Promise<void> {
+    if (!this.db) {
+      throw new Error("SQLite database is not connected.");
+    }
+    if (!this.inTransaction) {
+      throw new Error("No transaction in progress.");
+    }
+    await this.db.exec("COMMIT");
+    this.inTransaction = false;
+  }
+
+  async rollbackTransaction(): Promise<void> {
+    if (!this.db) {
+      throw new Error("SQLite database is not connected.");
+    }
+    if (!this.inTransaction) {
+      throw new Error("No transaction in progress.");
+    }
+    await this.db.exec("ROLLBACK");
+    this.inTransaction = false;
+  }
 }
 
 
@@ -115,19 +176,29 @@ import * as odbc from 'odbc';
 class ODBCConnection implements DatabaseConnection {
   private connection: odbc.Connection | null = null;
   private readonly options: { connectionString: string };
+  private inTransaction: boolean = false;
 
   constructor(options: { connectionString: string }) {
     this.options = options;
   }
 
   async connect(): Promise<void> {
-    this.connection = await odbc.connect(this.options.connectionString);
-    console.log('Connected to ODBC database.');
+    if (!this.connection) {
+      this.connection = await odbc.connect(this.options.connectionString);
+      // Configure connection settings
+      await this.connection.query("SET NOCOUNT ON");
+      await this.connection.query("SET XACT_ABORT ON"); // Automatically rollback on error
+      console.log('Connected to ODBC database.');
+    }
   }
 
   async disconnect(): Promise<void> {
     if (this.connection) {
+      if (this.inTransaction) {
+        await this.rollbackTransaction();
+      }
       await this.connection.close();
+      this.connection = null;
       console.log('Disconnected from ODBC database.');
     }
   }
@@ -137,14 +208,46 @@ class ODBCConnection implements DatabaseConnection {
       throw new Error('ODBC database is not connected.');
     }
 
-    // Replace placeholders with parameterized values if needed
-    const formattedQuery = this.formatQuery(query, params);
-    const result = await this.connection.query(formattedQuery);
-    return result;
+    try {
+      // Replace placeholders with parameterized values if needed
+      const formattedQuery = this.formatQuery(query, params);
+      console.log('Executing query:', formattedQuery);
+      
+      // For non-SELECT queries, use direct query execution
+      if (!query.trim().toUpperCase().startsWith("SELECT")) {
+        return await this.connection.query(formattedQuery);
+      }
+      
+      // For SELECT queries, use prepared statement to handle results
+      const result = await this.connection.query(formattedQuery);
+      return Array.isArray(result) ? result : result ? [result] : [];
+      
+    } catch (error: any) {
+      console.error('SQL Error:', error);
+      if (error.odbcErrors) {
+        console.error('ODBC Errors:', JSON.stringify(error.odbcErrors, null, 2));
+      }
+      throw error;
+    }
   }
 
   async tryTransaction(statements: string[]): Promise<void> {
-    throw new Error('Transaction not supported for ODBC.');
+    if (!this.connection) {
+      throw new Error('ODBC database is not connected.');
+    }
+
+    try {
+      await this.beginTransaction();
+      
+      for (const statement of statements) {
+        await this.executeQuery(statement);
+      }
+
+      await this.commitTransaction();
+    } catch (error) {
+      await this.rollbackTransaction();
+      throw error;
+    }
   }
 
   private formatQuery(query: string, params: any[]): string {
@@ -152,7 +255,45 @@ class ODBCConnection implements DatabaseConnection {
     let index = 0;
     return query.replace(/\?/g, () => {
       const param = params[index++];
-      return typeof param === 'string' ? `'${param}'` : param;
+      if (param === null) return 'NULL';
+      if (typeof param === 'string') return `'${param.replace(/'/g, "''")}'`;
+      if (param instanceof Date) return `'${param.toISOString()}'`;
+      return param;
     });
+  }
+
+  async beginTransaction(): Promise<void> {
+    if (!this.connection) {
+      throw new Error('ODBC database is not connected.');
+    }
+    if (this.inTransaction) {
+      throw new Error("Transaction already in progress.");
+    }
+    await this.connection.query("SET IMPLICIT_TRANSACTIONS OFF");
+    await this.connection.query("SET XACT_ABORT ON");
+    await this.connection.query("BEGIN TRAN");
+    this.inTransaction = true;
+  }
+
+  async commitTransaction(): Promise<void> {
+    if (!this.connection) {
+      throw new Error('ODBC database is not connected.');
+    }
+    if (!this.inTransaction) {
+      throw new Error("No transaction in progress.");
+    }
+    await this.connection.query("COMMIT TRAN");
+    this.inTransaction = false;
+  }
+
+  async rollbackTransaction(): Promise<void> {
+    if (!this.connection) {
+      throw new Error('ODBC database is not connected.');
+    }
+    if (!this.inTransaction) {
+      return; // Silently return if no transaction is in progress
+    }
+    await this.connection.query("IF @@TRANCOUNT > 0 ROLLBACK TRAN");
+    this.inTransaction = false;
   }
 }

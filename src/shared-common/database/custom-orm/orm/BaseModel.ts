@@ -7,8 +7,52 @@ import { ConnectionManager, DatabaseConnection } from "./ConnectionManager";
 export class BaseModel {
   private static connectionManager = ConnectionManager.getInstance();
 
-  static get connection(): DatabaseConnection {
-    return this.connectionManager.getConnection();
+  static async getConnection(): Promise<DatabaseConnection> {
+    return await this.connectionManager.getConnection();
+  }
+
+  /**
+   * Starts a new database transaction
+   * @throws Error if a transaction is already in progress
+   */
+  static async beginTransaction(): Promise<void> {
+    const connection = await this.getConnection();
+    await connection.beginTransaction();
+  }
+
+  /**
+   * Commits the current transaction
+   * @throws Error if no transaction is in progress
+   */
+  static async commitTransaction(): Promise<void> {
+    const connection = await this.getConnection();
+    await connection.commitTransaction();
+  }
+
+  /**
+   * Rolls back the current transaction
+   * @throws Error if no transaction is in progress
+   */
+  static async rollbackTransaction(): Promise<void> {
+    const connection = await this.getConnection();
+    await connection.rollbackTransaction();
+  }
+
+  /**
+   * Executes a function within a transaction, automatically handling commit and rollback
+   * @param callback The async function to execute within the transaction
+   * @returns The result of the callback function
+   */
+  static async executeInTransaction<T>(callback: () => Promise<T>): Promise<T> {
+    await this.beginTransaction();
+    try {
+      const result = await callback();
+      await this.commitTransaction();
+      return result;
+    } catch (error) {
+      await this.rollbackTransaction();
+      throw error;
+    }
   }
 
   
@@ -23,7 +67,7 @@ export class BaseModel {
       const modelToTableMapping = this.getModelToTableFieldMap();
       whereClause = this.generateSqlWhereClause(whereFields,modelToTableMapping,filter);
     }
-    const db = this.connection;
+    const db = await this.getConnection();
     const sql = `SELECT * FROM ${tableName} ${whereClause}`;
     const rawTableRecords = await this.tryExecuteDatabaseOperation(db, sql);
     const modelInstances = rawTableRecords.map((record: Record<string, any>) =>
@@ -43,7 +87,7 @@ export class BaseModel {
     const whereClause = this.generateSqlWhereClause(keyFields,modelToTableMapping,filters);
     const sql = `SELECT * FROM ${tableName} ${whereClause}`;
 
-    const db = this.connection;
+    const db = await this.getConnection();
     const tableRecords = await this.tryExecuteDatabaseOperation(db, sql);
 
     const modelInstances = tableRecords.map((record: Record<string, any>) =>
@@ -59,14 +103,14 @@ export class BaseModel {
     const modelToColumnMapping = this.getModelToTableFieldMap();
     const whereClause = this.generateSqlWhereClause(keyFields,modelToColumnMapping,model);
     const sql = `DELETE FROM ${tableName} ${whereClause}`;
-    const db = this.connection;
+    const db = await this.getConnection();
     const result = await this.tryExecuteDatabaseOperation(db, sql); //result is of type any due various DB types.
     return instance; 
   }
 
   static async update<T extends Record<string, any>>(instance: T): Promise<T> {
     const sql = this.generateUpdateSQL(instance);
-    const db = this.connection;
+    const db = await this.getConnection();
     const result = await this.tryExecuteDatabaseOperation(db, sql);
     return instance;
   }
@@ -83,7 +127,7 @@ export class BaseModel {
     );
     const record = this.mapModelToRecord(modelExcludingIdentyProperties);
     const sql = this.generateInsertStatment(tableName, record);
-    const db = this.connection;
+    const db = await this.getConnection();
     const result = await this.tryExecuteDatabaseOperation(db, sql);
     return instance;
 
@@ -187,7 +231,6 @@ export class BaseModel {
     sql: string
   ) {
     try {
-      await db.connect();
       const result = await db.executeQuery(sql);      
       if (!result) throw new Error("Error executing SQL");
       return result;
@@ -196,8 +239,6 @@ export class BaseModel {
       else {
         throw new Error("Error executing SQL");
       }
-    } finally {
-      await db.disconnect();
     }
   }
 
@@ -206,16 +247,13 @@ export class BaseModel {
     sqlStatements: string[]
   ) {
     try {
-      await db.connect();
-  await db.tryTransaction(sqlStatements);     
+      await db.tryTransaction(sqlStatements);     
       return true;
     } catch (error) {
       if (error instanceof Error) throw error;
       else {
         throw new Error("Error executing SQL");
       }
-    } finally {
-      await db.disconnect();
     }
   }
 
