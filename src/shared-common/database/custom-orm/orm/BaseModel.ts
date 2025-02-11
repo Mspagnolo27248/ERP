@@ -1,8 +1,7 @@
 import { ConnectionManager, DatabaseConnection } from "./ConnectionManager";
 
 
-//TODO:  values need to be parameterized
-//TODO: How do id fields and keyfields work together one or the other?
+
 
 export class BaseModel {
   private static connectionManager = ConnectionManager.getInstance();
@@ -62,14 +61,17 @@ export class BaseModel {
   ): Promise<T[]> {
     const tableName = this.getTableName();
     let whereClause = "";
+    let params: any[] = [];
     if(filter){
       const whereFields = Object.keys(filter) as (keyof T)[];
       const modelToTableMapping = this.getModelToTableFieldMap();
-      whereClause = this.generateSqlWhereClause(whereFields,modelToTableMapping,filter);
+      const { clause, parameters } = this.generateSqlWhereClause(whereFields, modelToTableMapping, filter);
+      whereClause = clause;
+      params = parameters;
     }
     const db = await this.getConnection();
     const sql = `SELECT * FROM ${tableName} ${whereClause}`;
-    const rawTableRecords = await this.tryExecuteDatabaseOperation(db, sql);
+    const rawTableRecords = await this.tryExecuteDatabaseOperation(db, sql, params);
     const modelInstances = rawTableRecords.map((record: Record<string, any>) =>
       this.mapRecordToModel<T>(record)
     );
@@ -84,11 +86,11 @@ export class BaseModel {
     const keyFields: (keyof T)[] = this.getKeyFields();
     this.verifyAllKeyFieldsArePassedByFilter(keyFields, filters);
     const modelToTableMapping = this.getModelToTableFieldMap();   
-    const whereClause = this.generateSqlWhereClause(keyFields,modelToTableMapping,filters);
-    const sql = `SELECT * FROM ${tableName} ${whereClause}`;
+    const { clause, parameters } = this.generateSqlWhereClause(keyFields, modelToTableMapping, filters);
+    const sql = `SELECT * FROM ${tableName} ${clause}`;
 
     const db = await this.getConnection();
-    const tableRecords = await this.tryExecuteDatabaseOperation(db, sql);
+    const tableRecords = await this.tryExecuteDatabaseOperation(db, sql, parameters);
 
     const modelInstances = tableRecords.map((record: Record<string, any>) =>
       this.mapRecordToModel<T>(record)
@@ -101,17 +103,17 @@ export class BaseModel {
     const model = this.instantiateModelFromDTO(instance);
     const keyFields = this.getKeyFields();
     const modelToColumnMapping = this.getModelToTableFieldMap();
-    const whereClause = this.generateSqlWhereClause(keyFields,modelToColumnMapping,model);
-    const sql = `DELETE FROM ${tableName} ${whereClause}`;
+    const { clause, parameters } = this.generateSqlWhereClause(keyFields, modelToColumnMapping, model);
+    const sql = `DELETE FROM ${tableName} ${clause}`;
     const db = await this.getConnection();
-    const result = await this.tryExecuteDatabaseOperation(db, sql); //result is of type any due various DB types.
+    const result = await this.tryExecuteDatabaseOperation(db, sql, parameters); //result is of type any due various DB types.
     return instance; 
   }
 
   static async update<T extends Record<string, any>>(instance: T): Promise<T> {
-    const sql = this.generateUpdateSQL(instance);
+    const { sql, parameters } = this.generateUpdateSQL(instance);
     const db = await this.getConnection();
-    const result = await this.tryExecuteDatabaseOperation(db, sql);
+    const result = await this.tryExecuteDatabaseOperation(db, sql, parameters);
     return instance;
   }
 
@@ -125,12 +127,11 @@ export class BaseModel {
       model,
       identityProperties
     );
-    const record = this.mapModelToRecord(modelExcludingIdentyProperties);
-    const sql = this.generateInsertStatment(tableName, record);
+    const modelToTableMapping = this.getModelToTableFieldMap();
+    const { sql, parameters } = this.generateInsertStatement(tableName, modelExcludingIdentyProperties, modelToTableMapping);
     const db = await this.getConnection();
-    const result = await this.tryExecuteDatabaseOperation(db, sql);
+    const result = await this.tryExecuteDatabaseOperation(db, sql, parameters);
     return instance;
-
   }
 
 
@@ -228,10 +229,11 @@ export class BaseModel {
   }
   protected static async tryExecuteDatabaseOperation(
     db: DatabaseConnection,
-    sql: string
+    sql: string,
+    params: any[] = []
   ) {
     try {
-      const result = await db.executeQuery(sql);      
+      const result = await db.executeQuery(sql, params);      
       if (!result) throw new Error("Error executing SQL");
       return result;
     } catch (error) {
@@ -261,72 +263,93 @@ export class BaseModel {
     whereFields: (keyof T)[],
     modelToTableMapping: Record<keyof T, string>,
     filters: Partial<T>
-  ): string {
+  ): { clause: string; parameters: any[] } {
+    const parameters: any[] = [];
     const criteria: string[] = whereFields.map((key) => {
       const columnName = modelToTableMapping[key];
       const value = filters[key];
-      return `${columnName}=${
-        typeof value === "string" ? `'${value}'` : value
-      }`;
+      parameters.push(value);
+      return `${columnName}=?`;
     });
-    const whereClause = `WHERE ${criteria.join(" AND ")}`;
-    return whereClause;
+    return {
+      clause: criteria.length > 0 ? `WHERE ${criteria.join(" AND ")}` : "",
+      parameters
+    };
   }
 
-  private static generateInsertStatment<T extends Record<string, any>>(
+  private static generateInsertStatement<T extends Record<string, any>>(
     tableName: string,
-    record: T
-  ) {
-    const tableFields = Object.keys(record).join(", ");
-    const fieldValues = Object.entries(record).map(([key, value]) => {
-      return typeof value === "string" ? `'${value}'` : value;
+    record: T,
+    modelToTableMapping: Record<string, string>
+  ): { sql: string; parameters: any[] } {
+    const parameters: any[] = [];
+    const tableFields: string[] = [];
+    
+    Object.keys(record).forEach(modelField => {
+      if (modelToTableMapping[modelField]) {
+        tableFields.push(modelToTableMapping[modelField]);
+        parameters.push(record[modelField]);
+      }
     });
-    const valuesString = fieldValues.join(", ");
-    return `INSERT INTO ${tableName} (${tableFields}) VALUES (${valuesString})`;
+
+    const placeholders = Array(parameters.length).fill('?').join(', ');
+    const sql = `INSERT INTO ${tableName} (${tableFields.join(", ")}) VALUES (${placeholders})`;
+    return { sql, parameters };
   }
 
-  static insertSql<T extends Record<string, any>>(instance: T): string {
-    const tableName = this.getTableName();
-    const model = this.instantiateModelFromDTO(instance);
-    const identityProperties = this.getIdentityPropeties();
-    const modelExcludingIdentyProperties = dropPropertiesFromModel(
-      model,
-      identityProperties
-    );
-    const record = this.mapModelToRecord(modelExcludingIdentyProperties);
-    const sql = this.generateInsertStatment(tableName, record);
-    return sql;
-  }
+  
+  // static insertSql<T extends Record<string, any>>(instance: T): { sql: string; parameters: any[] } {
+  //   const tableName = this.getTableName();
+  //   const model = this.instantiateModelFromDTO(instance);
+  //   const identityProperties = this.getIdentityPropeties();
+  //   const modelExcludingIdentyProperties = dropPropertiesFromModel(
+  //     model,
+  //     identityProperties
+  //   );
+  //   const modelToTableMapping = this.getModelToTableFieldMap();
+  //   return this.generateInsertStatement(tableName, modelExcludingIdentyProperties, modelToTableMapping);
+  // }
 
-  static generateUpdateSQL<T extends Record<string, any>>(instance: T): string {
+  static generateUpdateSQL<T extends Record<string, any>>(instance: T): { sql: string; parameters: any[] } {
     const tableName = this.getTableName();
     const model = this.instantiateModelFromDTO(instance);
     const identityFields = this.getIdentityPropeties();
-    const modelExcludingIdentyFields = dropPropertiesFromModel(model,identityFields);
+    const modelExcludingIdentyFields = dropPropertiesFromModel(model, identityFields);
     const keyFields = this.getKeyFields();
     const whereValues = filterModelByProperties(model, keyFields);
-    const modelToColumnMapping = this.getModelToTableFieldMap();
-    const whereClasue = this.generateSqlWhereClause(keyFields, modelToColumnMapping, whereValues);
-    const setClause = this.generateSqlSetClause(modelExcludingIdentyFields);
+    const modelToTableMapping = this.getModelToTableFieldMap();
+    
+    const { clause: whereClause, parameters: whereParams } = this.generateSqlWhereClause(keyFields, modelToTableMapping, whereValues);
+    const { clause: setClause, parameters: setParams } = this.generateSqlSetClause(modelExcludingIdentyFields, modelToTableMapping);
 
-    const sql = `UPDATE ${tableName} ${setClause} ${whereClasue}`;
-    return sql;
+    const sql = `UPDATE ${tableName} ${setClause} ${whereClause}`;
+    return { sql, parameters: [...setParams, ...whereParams] };
   }
 
-  protected static generateSqlSetClause<T extends Record<string, any>>(model: T): string {
-    const modelToColumnMapping = this.getModelToTableFieldMap();
-    const setClause = Object.entries(model).map(([key, value]) => {
-      const columnName = modelToColumnMapping[key];
-      return `${columnName}=${typeof value === "string" ? `'${value}'` : value}`;
-    }).join(", ");
-    return `SET ${setClause}`;
+  protected static generateSqlSetClause<T extends Record<string, any>>(
+    model: T,
+    modelToTableMapping: Record<string, string>
+  ): { clause: string; parameters: any[] } {
+    const parameters: any[] = [];
+    const setClauses: string[] = [];
+
+    Object.entries(model).forEach(([modelField, value]) => {
+      const tableField = modelToTableMapping[modelField];
+      if (tableField) {
+        parameters.push(value);
+        setClauses.push(`${tableField}=?`);
+      }
+    });
+
+    return { 
+      clause: `SET ${setClauses.join(", ")}`,
+      parameters
+    };
   }
 }
 
 
 
-
-type Constructor<T> = new (...args: any[]) => T;
 
 
 function updateTargetValuesFromSource(

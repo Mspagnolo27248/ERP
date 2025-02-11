@@ -210,19 +210,8 @@ class ODBCConnection implements DatabaseConnection {
     }
 
     try {
-      // Replace placeholders with parameterized values if needed
-      const formattedQuery = this.formatQuery(query, params);
-      console.log('Executing query:', formattedQuery);
-      
-      // For non-SELECT queries, use direct query execution
-      if (!query.trim().toUpperCase().startsWith("SELECT")) {
-        return await this.connection.query(formattedQuery);
-      }
-      
-      // For SELECT queries, use prepared statement to handle results
-      const result = await this.connection.query(formattedQuery);
+      const result = await this.connection.query(query, params);
       return Array.isArray(result) ? result : result ? [result] : [];
-      
     } catch (error: any) {
       console.error('SQL Error:', error);
       if (error.odbcErrors) {
@@ -249,18 +238,6 @@ class ODBCConnection implements DatabaseConnection {
       await this.rollbackTransaction();
       throw error;
     }
-  }
-
-  private formatQuery(query: string, params: any[]): string {
-    if (params.length === 0) return query;
-    let index = 0;
-    return query.replace(/\?/g, () => {
-      const param = params[index++];
-      if (param === null) return 'NULL';
-      if (typeof param === 'string') return `'${param.replace(/'/g, "''")}'`;
-      if (param instanceof Date) return `'${param.toISOString()}'`;
-      return param;
-    });
   }
 
   async beginTransaction(): Promise<void> {
