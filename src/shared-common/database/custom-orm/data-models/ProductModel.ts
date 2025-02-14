@@ -3,7 +3,7 @@ import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
 import { BaseModel } from "../orm/BaseModel";
 
 
-@ARGModel('GGSPROD_BKP')
+@ARGModel('ZGSPROD')
 export class ProductModel extends BaseModel implements ProductDto {
     @KeyField
     @TableColumn('TPPROD')

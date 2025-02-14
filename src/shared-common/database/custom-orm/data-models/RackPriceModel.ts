@@ -3,8 +3,9 @@ import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
 import { BaseModel } from "../orm/BaseModel";
 
 
-@ARGModel('GBBPRCE')
+@ARGModel('ZBBPRCE')
 export class RackPriceModel extends BaseModel implements RackPriceDto {
+    @KeyField
     @TableColumn('RKCONO')
     companyNumber: number = 0; // RKCONO, initialized with 0
 
@@ -26,7 +27,7 @@ export class RackPriceModel extends BaseModel implements RackPriceDto {
 
     @KeyField
     @TableColumn('RKDATE')
-    effectiveDate: string = ''; // RKDATE, initialized with empty string
+    effectiveDate: number = 0; // RKDATE, initialized with empty string
 
     @KeyField
     @TableColumn('RKTIME')
@@ -66,7 +67,7 @@ export class RackPriceModel extends BaseModel implements RackPriceDto {
     quantityTier5: number = 0; // RKQT05, initialized with 0
 
     @TableColumn('RKRKRQ')
-    requiredFlag: string = ''; // RKRKRQ, initialized with empty string
+    noRackFlag: string = ''; // RKRKRQ, initialized with empty string
 
     @TableColumn('RKINAC')
     inactiveFlag: string = ''; // RKINAC, initialized with empty string

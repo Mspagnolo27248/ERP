@@ -21,22 +21,21 @@ import { PricingRepository } from "./PricingRepository";
 
 
 
-export class PricingRepositoryImp  extends Repository implements PricingRepository {
+export class PricingRepositoryImp extends Repository implements PricingRepository {
 
 
-  async getAllRackPricing(): Promise<RackPriceDto[]> { 
-    try {     
-      return await RackPriceModel.findAll() as Promise<RackPriceDto[]>;  
+  async getAllRackPricing(): Promise<RackPriceDto[]> {
+    try {
+      return await RackPriceModel.findAll() as Promise<RackPriceDto[]>;
     } catch (error) {
       this.thowInfrastuctureError(error);
     }
-  
   }
 
 
-  async getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto> { 
+  async getRackPriceByKey(keys: Partial<RackPriceDto>): Promise<RackPriceDto> {
     try {
-      return await RackPriceModel.findByKey(keys);   
+      return await RackPriceModel.findByKey(keys);
     } catch (error) {
       this.thowInfrastuctureError(error);
     }
@@ -44,34 +43,31 @@ export class PricingRepositoryImp  extends Repository implements PricingReposito
 
 
   async getProductById(productId: string): Promise<ProductDto> {
-      return await ProductModel.findByKey({ productId })
+    return await ProductModel.findByKey({ productId })
   }
 
 
   async getAllProducts(): Promise<ProductDto[]> {
-      return await ProductModel.findAll();  
+    return await ProductModel.findAll();
   }
 
-    // async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {
-  //   try {
-  //     const results = await RackPriceModel.upsert(rackPriceDto);
-  //     return results;
-  //   } catch (error) {
-  //     throw new Error(JSON.stringify(error));
-  //   }
-  // }
+  async upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto> {
+    try {
+      const results = await RackPriceModel.upsert(rackPriceDto);
+      return results;
+    } catch (error) {
+      this.thowInfrastuctureError(error);
+    }
+  }
 
 
-    // async deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> {
-  //   try {
-  //     return await RackPriceModel.delete(instance);
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       throw new Error(`Error executing getAllRackPricing() ${error.message}`);
-  //     }
-  //     throw new Error("Error executing getAllRackPricing()");
-  //   }
-  // }
+  async deleteRackPrice(instance: RackPriceDto): Promise<RackPriceDto> {
+    try {
+      return await RackPriceModel.delete(instance);
+    } catch (error) {
+      this.thowInfrastuctureError(error)
+    }
+  }
 
 
 

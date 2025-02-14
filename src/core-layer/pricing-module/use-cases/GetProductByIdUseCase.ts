@@ -1,6 +1,5 @@
 import { UseCase } from "../../general/UseCase";
 import { PricingRepository } from "../data-access-repository/PricingRepository";
-import { ProductDto } from "../data-transfer-objects/price-records-dtos";
 import { Product } from "../domain-entities/Product";
 
 

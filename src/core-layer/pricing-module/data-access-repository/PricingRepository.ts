@@ -16,7 +16,7 @@ export interface PricingRepository {
     getRackPriceByKey(keys:Partial<RackPriceDto>): Promise<RackPriceDto>;  
     getProductById(productId: string): Promise<ProductDto>; /*these would be in a master data repo here for simplicty*/ 
     getAllProducts(): Promise<ProductDto[]> 
-    // upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto>
-    // deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> 
+    upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto>
+    deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> 
 }
 

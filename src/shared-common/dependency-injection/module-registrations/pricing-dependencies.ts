@@ -1,5 +1,6 @@
 import { PricingRepository } from "../../../core-layer/pricing-module/data-access-repository/PricingRepository";
 import { PricingRepositoryImp } from "../../../core-layer/pricing-module/data-access-repository/PricingReposityoryImp";
+import { CreateRackPriceUseCase } from "../../../core-layer/pricing-module/use-cases/CreateRackPriceUseCase";
 import { GetProductByIdUseCase } from "../../../core-layer/pricing-module/use-cases/GetProductByIdUseCase";
 import { GetProductUseCase } from "../../../core-layer/pricing-module/use-cases/GetProductsUseCase";
 import { GetRackPriceByKeyUseCase } from "../../../core-layer/pricing-module/use-cases/GetRackPriceByKeyUseCase";
@@ -14,6 +15,7 @@ export type PricingModuleContainerTypes = {
     GetProductUseCase: GetProductUseCase,
     GetRackPricingUseCase: GetRackPricingUseCase,
     GetRackPriceByKeyUseCase: GetRackPriceByKeyUseCase,
+    CreateRackPriceUseCase:CreateRackPriceUseCase
   };
   
   export function registerPricingModuleDependencies<T extends PricingModuleContainerTypes>(container: DIContainer<T>) {  
@@ -26,6 +28,7 @@ export type PricingModuleContainerTypes = {
     container.register("GetProductUseCase", () => new GetProductUseCase(container.resolve("PricingRepository")));
     container.register("GetRackPricingUseCase",()=>new GetRackPricingUseCase(container.resolve("PricingRepository")))
     container.register("GetRackPriceByKeyUseCase",()=>new GetRackPriceByKeyUseCase(container.resolve("PricingRepository")))
+    container.register("CreateRackPriceUseCase",()=>new CreateRackPriceUseCase(container.resolve("PricingRepository")))
   
     return container;
   }

@@ -1,6 +1,6 @@
 import { Entity } from "../../general/Entity";
 import { RackPriceDto } from "../data-transfer-objects/price-records-dtos";
-import { UnitOfMeasure } from "../domain-enums/price-record-enums";
+
 
 
 export class RackPrice extends Entity {
@@ -9,7 +9,7 @@ export class RackPrice extends Entity {
     productCode: string;
     containerCode: string;
     unitOfMeasure: string;
-    effectiveDate: string;
+    effectiveDate: number;
     effectiveTime: number;
     price: number;
     priceTier1: string;
@@ -22,9 +22,10 @@ export class RackPrice extends Entity {
     quantityTier3: number;
     quantityTier4: number;
     quantityTier5: number;
-    requiredFlag: string;
+    noRackFlag: string;
     inactiveFlag: string;
-    private rackPricePerGallon?: number;
+    statusFlag:string;
+  
 
     constructor(rackPriceDto: RackPriceDto) {
         super();
@@ -40,35 +41,57 @@ export class RackPrice extends Entity {
         this.priceTier2 = rackPriceDto.priceTier2;
         this.priceTier3 = rackPriceDto.priceTier3;
         this.priceTier4 = rackPriceDto.priceTier4;
-        this.minimumQuantity = rackPriceDto.minimumQuantity;
+        this.minimumQuantity = rackPriceDto.minimumQuantity==0?1:rackPriceDto.minimumQuantity;
         this.quantityTier1 = rackPriceDto.quantityTier1;
         this.quantityTier2 = rackPriceDto.quantityTier2;
         this.quantityTier3 = rackPriceDto.quantityTier3;
         this.quantityTier4 = rackPriceDto.quantityTier4;
         this.quantityTier5 = rackPriceDto.quantityTier5;
-        this.requiredFlag = rackPriceDto.requiredFlag;
+        this.noRackFlag = rackPriceDto.noRackFlag;
         this.inactiveFlag = rackPriceDto.inactiveFlag;
 
-        this.validateUnitOfMeasure();
-    }   
-    
-     private validateUnitOfMeasure(): void {
-        if (!Object.values(UnitOfMeasure).includes(this.unitOfMeasure as UnitOfMeasure)) {
-            throw new Error(`Invalid unit of measure: ${this.unitOfMeasure}. Must be one of: ${Object.values(UnitOfMeasure).join(", ")}`);
-        }
+        
+        //Validations      
+        this.validateMinQuantity(this.minimumQuantity)
+        this.validationNoRack(this.noRackFlag);
+        this.validationInactiveField(this.inactiveFlag);
+        this.validatePrice(this.price);
+
+        this.statusFlag = this.setStatusFlag(this.effectiveDate);
+
     }
-    public setRackPricePerGallon(GallonsPerUom: number): void {
-        if (this.unitOfMeasure === UnitOfMeasure.GAL) {
-            this.rackPricePerGallon = this.price;
-        } else {
-            this.rackPricePerGallon = this.price * GallonsPerUom;
+
+    private validatePrice(price: number) {
+        if(price <=0) this.throwDomainError("Price must be greater than 0")
+    }
+    private validateMinQuantity(qty: number) {
+        if (qty < 1) this.throwDomainError("Min Quantity Must be greater than 1")
+    }
+
+    private validationNoRack(noRackFlag: string) {
+        if (!(noRackFlag === 'N' || noRackFlag === '')) {
+            this.throwDomainError("Invalid No Rack Flag must be N or '")
         }
     }
 
-    public getRackPricePerGallon(): number {
-        if (this.rackPricePerGallon === undefined) {
-            throw new Error('Rack price per gallon is not set');
+    private validationInactiveField(inActiveflag: string) {
+        if (!(inActiveflag === 'I' || inActiveflag === '')) {
+            this.throwDomainError("Invalid In-active field value 'I'  or blank")
         }
-        return this.rackPricePerGallon;
     }
+
+    private setStatusFlag(effectiveDate:number){
+        let statusFlag = '';
+        const dateString = effectiveDate.toString(); 
+        const year = parseInt(dateString.substring(0, 4), 10);
+        const month = parseInt(dateString.substring(4, 6), 10) - 1; 
+        const day = parseInt(dateString.substring(6, 8), 10);
+    
+        const dateToCompare = new Date(year, month, day); 
+        const today = new Date();
+        dateToCompare> today?statusFlag = 'FUT': statusFlag = 'CUR'
+        return statusFlag;
+    }
+
+
 }

@@ -7,7 +7,7 @@ export interface RackPriceDto {
     productCode: string;         
     containerCode: string;       
     unitOfMeasure: string;       
-    effectiveDate: string;       
+    effectiveDate: number;       
     effectiveTime: number;        
     price: number;               
     priceTier1: string;          
@@ -20,7 +20,7 @@ export interface RackPriceDto {
     quantityTier3: number;       
     quantityTier4: number;       
     quantityTier5: number;       
-    requiredFlag: string;      
+    noRackFlag: string;      
     inactiveFlag: string;        
 }
 
@@ -30,7 +30,7 @@ location:string
 productCode:string;
 containerCode:string;
 unitOfMeasure:string;
-effectiveDate:string;
+effectiveDate:number;
 effectiveTime:number;
 }
 
