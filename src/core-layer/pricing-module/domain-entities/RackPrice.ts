@@ -30,9 +30,9 @@ export class RackPrice extends Entity {
     constructor(rackPriceDto: RackPriceDto) {
         super();
         this.companyNumber = rackPriceDto.companyNumber;
-        this.location = rackPriceDto.location;
-        this.productCode = rackPriceDto.productCode;
-        this.containerCode = rackPriceDto.containerCode;
+        this.location = rackPriceDto.location.trim();
+        this.productCode = rackPriceDto.productCode.trim();
+        this.containerCode = rackPriceDto.containerCode.trim();
         this.unitOfMeasure = rackPriceDto.unitOfMeasure.trim();
         this.effectiveDate = rackPriceDto.effectiveDate;
         this.effectiveTime = rackPriceDto.effectiveTime;
@@ -47,22 +47,24 @@ export class RackPrice extends Entity {
         this.quantityTier3 = rackPriceDto.quantityTier3;
         this.quantityTier4 = rackPriceDto.quantityTier4;
         this.quantityTier5 = rackPriceDto.quantityTier5;
-        this.noRackFlag = rackPriceDto.noRackFlag;
-        this.inactiveFlag = rackPriceDto.inactiveFlag;
+        this.noRackFlag = rackPriceDto.noRackFlag.trim();
+        this.inactiveFlag = rackPriceDto.inactiveFlag.trim();
 
         
         //Validations      
         this.validateMinQuantity(this.minimumQuantity)
         this.validationNoRack(this.noRackFlag);
         this.validationInactiveField(this.inactiveFlag);
-        this.validatePrice(this.price);
+        this.validatePrice(this);
 
         this.statusFlag = this.setStatusFlag(this.effectiveDate);
 
     }
 
-    private validatePrice(price: number) {
-        if(price <=0) this.throwDomainError("Price must be greater than 0")
+    private validatePrice(dto:RackPriceDto) {
+        if (dto.price < 0) {
+            this.throwDomainError(`Price must be greater than 0 :${dto.productCode}|${dto.effectiveDate}`)
+        }
     }
     private validateMinQuantity(qty: number) {
         if (qty < 1) this.throwDomainError("Min Quantity Must be greater than 1")

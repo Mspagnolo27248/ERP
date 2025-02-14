@@ -1,5 +1,6 @@
 import { ProductModel } from "../../../shared-common/database/custom-orm/data-models/ProductModel";
 import { RackPriceModel } from "../../../shared-common/database/custom-orm/data-models/RackPriceModel";
+import { ConnectionManager } from "../../../shared-common/database/custom-orm/orm/ConnectionManager";
 import { Repository } from "../../general/Repository";
 import { ProductDto, RackPriceDto } from "../data-transfer-objects/price-records-dtos";
 import { PricingRepository } from "./PricingRepository";
@@ -67,6 +68,34 @@ export class PricingRepositoryImp extends Repository implements PricingRepositor
     } catch (error) {
       this.thowInfrastuctureError(error)
     }
+  }
+
+  async  getCurrentRackPrices(): Promise<RackPriceDto[]> {
+
+    const results = await RackPriceModel.findAll();
+    const returnValues = getCurrentPrices(results,20250214,1200)
+    return returnValues
+
+
+    function getCurrentPrices(records: RackPriceDto[], currentDate: number, currentTime: number): RackPriceDto[] {
+      const grouped = new Map<string, RackPriceDto>();
+    
+      records.forEach(record => {
+        const key = `${record.location}-${record.productCode}-${record.containerCode}`;
+        const recordTimestamp = record.effectiveDate * 10000 + record.effectiveTime;
+        const currentTimestamp = currentDate * 10000 + currentTime;
+    
+        if (recordTimestamp > currentTimestamp) return;
+    
+        if (!grouped.has(key) || grouped.get(key)!.effectiveDate * 10000 + grouped.get(key)!.effectiveTime < recordTimestamp) {
+          grouped.set(key, record);
+        }
+      });
+    
+      return Array.from(grouped.values());
+    }
+    
+
   }
 
 

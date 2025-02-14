@@ -50,8 +50,8 @@ export class RackPriceController {
   @withHttpErrorHandling()
   static async delete(req: Request, res: Response) {
     const rackPriceDto = req.body as RackPriceDto;
-    // const usecase = container.resolve("DeleteRackPriceUseCase");
-    // const rackPrice = await usecase.execute(rackPriceDto);
+    const usecase = container.resolve("DeleteRackPriceUseCase");
+    const rackPrice = await usecase.execute(rackPriceDto);
     return res.status(204).json('rackPrice');
   }
 

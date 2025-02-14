@@ -1,8 +1,7 @@
 import { ConnectionManager, DatabaseConnection } from "./ConnectionManager";
 
 
-//TODO:  values need to be parameterized
-//TODO: How do id fields and keyfields work together one or the other?
+
 
 export class BaseModel {
   private static connectionManager = ConnectionManager.getInstance();

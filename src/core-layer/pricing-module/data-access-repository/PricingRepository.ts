@@ -18,5 +18,6 @@ export interface PricingRepository {
     getAllProducts(): Promise<ProductDto[]> 
     upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto>
     deleteRackPrice(instance:RackPriceDto): Promise<RackPriceDto> 
+    getCurrentRackPrices():Promise<RackPriceDto[]>;
 }
 
