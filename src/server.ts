@@ -7,7 +7,6 @@ import { swaggerSpec } from './swaggerConfig'
 import swaggerUi from 'swagger-ui-express';
 import { registerDependencies } from "./shared-common/dependency-injection/register-dependencies";
 import { ConnectionManager } from "./shared-common/database/custom-orm/orm/ConnectionManager";
-import path from 'path';
 import { MasterDataCacheImp } from "./shared-common/data-cache/MasterDataCacheImp";
 
 
@@ -47,7 +46,9 @@ app.listen(port, () => {
 async function getConnection() {
   await ConnectionManager.getInstance().configureConnection('odbc',
     { connectionString: 
-'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;' }
+//'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;'
+ 'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;'
+}
   );
 }
 
