@@ -47,7 +47,8 @@ async function getConnection() {
   await ConnectionManager.getInstance().configureConnection('odbc',
     { connectionString: 
 //'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;'
- 'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;'
+ //'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;'
+ 'DSN=SQLODBC;UID=mstest;PWD=mstest;'
 }
   );
 }

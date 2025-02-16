@@ -186,9 +186,6 @@ class ODBCConnection implements DatabaseConnection {
   async connect(): Promise<void> {
     if (!this.connection) {
       this.connection = await odbc.connect(this.options.connectionString);
-      // Configure connection settings
-      await this.connection.query("SET NOCOUNT ON");
-      await this.connection.query("SET XACT_ABORT ON"); // Automatically rollback on error
       console.log('Connected to ODBC database.');
     }
   }
