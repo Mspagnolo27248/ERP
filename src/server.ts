@@ -8,6 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import { registerDependencies } from "./shared-common/dependency-injection/register-dependencies";
 import { ConnectionManager } from "./shared-common/database/custom-orm/orm/ConnectionManager";
 import { MasterDataCacheImp } from "./shared-common/data-cache/MasterDataCacheImp";
+import path from "path";
 
 
 
@@ -44,12 +45,13 @@ app.listen(port, () => {
 });
 
 async function getConnection() {
-  await ConnectionManager.getInstance().configureConnection('odbc',
-    { connectionString: 
+  // await ConnectionManager.getInstance().configureConnection('sqlite', {database: path.join('./', 'database.sqlite')});
+ await ConnectionManager.getInstance().configureConnection('odbc',
+  { connectionString: 
 //'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;'
  //'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;'
  'DSN=SQLODBC;UID=mstest;PWD=mstest;'
 }
-  );
+);
 }
 

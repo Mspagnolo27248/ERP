@@ -62,14 +62,12 @@ export class ConnectionManager {
 export interface DatabaseConnection {
     connect(): Promise<void>;
     disconnect(): Promise<void>;
-    executeQuery(query: string, params?: any[]): Promise<any>;
+    executeQuery(query: string, params?: (string|number)[]): Promise<any>;
     tryTransaction(statements: string[]): Promise<void>;
     beginTransaction(): Promise<void>;
     commitTransaction(): Promise<void>;
     rollbackTransaction(): Promise<void>;
 }
-
-
 
 
 

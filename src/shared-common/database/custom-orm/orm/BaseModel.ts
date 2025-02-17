@@ -53,6 +53,7 @@ export class BaseModel {
     const sql = `DELETE FROM ${tableName} ${whereClause}`;
     const db = await this.getConnection();
     const result = await this.tryExecuteDatabaseOperation(db, sql, parameters);
+    if(result.count === 0) throw new Error("No rows affected");
     return instance;
   }
 
@@ -71,6 +72,7 @@ export class BaseModel {
     );
     const db = await this.getConnection();
     const result = await this.tryExecuteDatabaseOperation(db, sql, parameters);
+    if(result.count === 0) throw new Error("No rows affected");
     return instance;
   }
 
@@ -87,6 +89,7 @@ export class BaseModel {
     );
     const db = await this.getConnection();
     const result = await this.tryExecuteDatabaseOperation(db, sql, parameters);
+    if(result.count === 0) throw new Error("No rows affected");
     return instance;
   }
 
