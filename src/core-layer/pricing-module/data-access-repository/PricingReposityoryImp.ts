@@ -52,22 +52,6 @@ export class PricingRepositoryImp
   }
 
 
-  async getProductById(productId: string): Promise<ProductDto> {
-    try {
-          const product = await this.cache.getByKey(
-            'products',
-            productId,
-            async () => {
-              const product = await ProductModel.findByKey({ productId });
-              return product as ProductDto;
-            }
-            );
-            return product as ProductDto;
-
-    } catch (error) {
-      this.thowInfrastuctureError(error);
-    }
-  }
 
   async getAllProducts(): Promise<ProductDto[]> {
     try {
@@ -86,6 +70,39 @@ export class PricingRepositoryImp
     }
   }
 
+
+  
+  async getProductById(productId: string): Promise<ProductDto> {
+    try {
+          const product = await this.cache.getByKey(
+            'products',
+            productId,
+            async () => {
+              const product = await ProductModel.findByKey({ productId });
+              return product as ProductDto;
+            }
+            );
+            return product as ProductDto;
+
+    } catch (error) {
+      this.thowInfrastuctureError(error);
+    }
+  }
+
+  async createProduct(product: ProductDto): Promise<ProductDto> {
+    try {
+      const results = await ProductModel.upsert(product);
+      if(!results) {
+        throw new Error('Product not created');
+      }
+      this.cache.invalidateTable('products');
+      return results
+    } catch (error) {
+      this.thowInfrastuctureError(error);
+    }
+  }
+
+
   async getPriceAgreementByKey(
     keys: PriceAgreementKeys
   ): Promise<PriceAgreementDto> {
@@ -103,5 +120,17 @@ export class PricingRepositoryImp
     return await PriceAgreementModel.findAll(where);
   }
 
+  async deleteProduct(productId: string){
+    try {
+      const results = await ProductModel.delete({ productId });
+      if(!results) {
+        throw new Error('Product not deleted');
+      }
+      this.cache.invalidateTable('products');
+      return results;
+    } catch (error) {
+      this.thowInfrastuctureError(error);
+    }
+  }
 
 }

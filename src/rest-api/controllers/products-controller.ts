@@ -25,15 +25,17 @@ export class ProductsController {
   static async delete(req: Request, res: Response) {
     const productID = req.params.id;
     if (!productID) throw new Error("Bad ID");
-    const data = await ProductModel.delete({ productId: productID });
-    return res.status(201).json(data);
+    const repo = container.resolve("PricingRepository");
+    await repo.deleteProduct(productID);
+    return res.status(201).json({ message: "Product deleted" });
   }
 
   @withHttpErrorHandling()
   static async upsert(req: Request, res: Response) {
     const product = req.body;
     if (!product.productId) throw new Error("Bad ID");
-    const data = await ProductModel.upsert(product);
+    const repo = container.resolve("PricingRepository");
+    const data = await repo.createProduct(product);
     return res.status(201).json(data);
   }
 
@@ -41,7 +43,8 @@ export class ProductsController {
   static async update(req: Request, res: Response) {
     const product = req.body;
     if (!product.productId) throw new Error("Bad ID");
-    const data = await ProductModel.update(product);
+    const repo = container.resolve("PricingRepository");
+    const data = await repo.createProduct(product);
     return res.status(201).json(data);
   }
 

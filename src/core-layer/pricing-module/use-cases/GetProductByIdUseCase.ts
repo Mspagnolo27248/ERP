@@ -17,7 +17,7 @@ export class GetProductByIdUseCase extends UseCase {
     async execute(productId:string): Promise<Product> {  
         try {
             const dto =  await this.pricingRepository.getProductById(String(productId))
-            if(!dto) throw new Error("No Product Exists")          
+            if(!dto) throw new Error(`No Product Exists with id ${productId}`)          
             const entity = new Product(dto);    
             return entity.toDTO();
 
