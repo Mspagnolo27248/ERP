@@ -27,8 +27,9 @@ export class RackPriceController {
   @withHttpErrorHandling()
   static async getAll(req: Request, res: Response){
     const filters = req.body;
+    const limit = parseInt(`${req.query.limit}`)||50;
     const usecase = container.resolve("GetRackPricingUseCase");    
-      const rackPrices = await usecase.execute(filters);
+      const rackPrices = await usecase.execute(filters,limit);
       return res.status(200).json(rackPrices);
 
 }

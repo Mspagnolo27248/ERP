@@ -49,7 +49,7 @@ export class RackPrice extends Entity {
         this.requiredFlag = rackPriceDto.requiredFlag;
         this.inactiveFlag = rackPriceDto.inactiveFlag;
 
-        this.validateUnitOfMeasure();
+       // this.validateUnitOfMeasure();
     }   
     
      private validateUnitOfMeasure(): void {

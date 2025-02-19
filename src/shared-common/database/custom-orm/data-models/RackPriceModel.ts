@@ -3,7 +3,7 @@ import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
 import { BaseModel } from "../orm/BaseModel";
 
 
-@ARGModel('GBBPRCE')
+@ARGModel('ZBBPRCE')
 export class RackPriceModel extends BaseModel implements RackPriceDto {
 
     @KeyField
