@@ -65,6 +65,12 @@ export interface ProductDto {
 }
 
 
+export interface ProductClassDto{
+        company: number;       
+        productClass: string;    
+        classDescription: string;    
+        division: string;
+}
 
 export interface PriceAgreementDto {
     delete: string;

@@ -33,7 +33,7 @@ export class ProductsController {
   static async upsert(req: Request, res: Response) {
     const product = req.body;
     if (!product.productId) throw new Error("Bad ID");
-    const repo = container.resolve("UpdateProductUseCase");
+    const repo = container.resolve("CreateProductUseCase");
     const data = await repo.execute(product);
     return res.status(201).json(data);
   }

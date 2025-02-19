@@ -1,4 +1,5 @@
 import { PriceAgreementModel } from "../../../shared-common/database/custom-orm/data-models/PriceAgreementModel";
+import { ProductClass } from "../../../shared-common/database/custom-orm/data-models/ProductClass";
 import { ProductModel } from "../../../shared-common/database/custom-orm/data-models/ProductModel";
 import { RackPriceModel } from "../../../shared-common/database/custom-orm/data-models/RackPriceModel";
 import { MasterDataCache } from "../../general/MasterDataCache";
@@ -143,6 +144,10 @@ export class PricingRepositoryImp
     } catch (error) {
       this.thowInfrastuctureError(error);
     }
+  }
+
+  async getAllProductClasses(){
+    return ProductClass.findAll();
   }
 
 }
