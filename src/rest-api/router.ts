@@ -15,7 +15,7 @@ const router = Router();
 
 
 /*This should be a list of Resources*/
-router.use('/rack-price',rackPriceRoutes);
+router.use('/rack-prices',rackPriceRoutes);
 router.use('/products',productsRoutes);
 //router.use('/special-price',specialPriceRoutes);
 // router.use('/orders',ordersRoutes);

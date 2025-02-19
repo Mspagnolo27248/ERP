@@ -130,22 +130,6 @@ const options = {
                     tags: ['Rack Prices'],
                     summary: 'Get all rack prices',
                     description: 'Retrieve all rack prices based on filters',
-                    requestBody: {
-                        required: true,
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    type: 'object',
-                                    properties: {
-                                        filters: {
-                                            type: 'object',
-                                            additionalProperties: true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
                     responses: {
                         '200': {
                             description: 'Successful operation',
@@ -163,21 +147,22 @@ const options = {
                     }
                 }
             },
-            '/api/rack-prices/single': {
-                post: {
+            '/api/rack-prices/{id}': {
+                get: {
                     tags: ['Rack Prices'],
                     summary: 'Get single rack price',
-                    description: 'Retrieve a single rack price by its keys',
-                    requestBody: {
-                        required: true,
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    $ref: '#/components/schemas/RackPriceKeys'
-                                }
-                            }
+                    description: 'Retrieve a single rack price by ID',
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            required: true,
+                            schema: {
+                                type: 'string'
+                            },
+                            description: 'Rack Price ID'
                         }
-                    },
+                    ],
                     responses: {
                         '200': {
                             description: 'Successful operation',
