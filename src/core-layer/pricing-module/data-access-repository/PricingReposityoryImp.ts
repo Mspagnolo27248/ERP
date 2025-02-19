@@ -102,6 +102,18 @@ export class PricingRepositoryImp
     }
   }
 
+  async updateProduct(product: ProductDto): Promise<ProductDto> {
+    try {
+      const results = await ProductModel.update(product);
+      if(!results) {
+        throw new Error('Product not updated');
+      }
+      this.cache.invalidateTable('products');
+      return results;
+    } catch (error) {
+      this.thowInfrastuctureError(error);
+    }
+  }
 
   async getPriceAgreementByKey(
     keys: PriceAgreementKeys

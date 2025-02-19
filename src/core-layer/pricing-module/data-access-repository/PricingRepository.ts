@@ -17,6 +17,7 @@ export interface PricingRepository {
     getProductById(productId: string): Promise<ProductDto>; /*these would be in a master data repo here for simplicty*/ 
     getAllProducts(): Promise<ProductDto[]> 
     createProduct(product: ProductDto): Promise<ProductDto>
+    updateProduct(product: ProductDto): Promise<ProductDto>
     // upsertRackPrice(rackPriceDto: RackPriceDto): Promise<RackPriceDto>
     deleteProduct(productId: string): Promise<any>;
     getPriceAgreementByKey(price:PriceAgreementKeys): Promise<PriceAgreementDto>;
