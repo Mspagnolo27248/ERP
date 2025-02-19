@@ -3,7 +3,7 @@ import { ARGModel, KeyField, TableColumn } from "../orm-decorators";
 import { BaseModel } from "../orm/BaseModel";
 
 
-@ARGModel('GGSPROD_BKP')
+@ARGModel('ZGSPROD')
 export class ProductModel extends BaseModel implements ProductDto {
     @KeyField
     @TableColumn('TPPROD')
@@ -13,7 +13,7 @@ export class ProductModel extends BaseModel implements ProductDto {
     productName: string = '';
 
     @TableColumn('TPCONO')
-    companyNumber: string = '';
+    companyNumber: number = 0;
 
     @TableColumn('TPIND8')
     inactiveDate: number = 0;
@@ -22,7 +22,7 @@ export class ProductModel extends BaseModel implements ProductDto {
     TPPLGR: number = 0;
 
     @TableColumn('TPPLCL')
-    productClass: number = 0;
+    priceClass: number = 0;
 
     @TableColumn('TPPRGP')
     productGroup: string = '';
@@ -34,7 +34,7 @@ export class ProductModel extends BaseModel implements ProductDto {
     shortDescription: string = '';
 
     @TableColumn('TPPRCL')
-    priceClass: string = '';
+    productClass: string = '';
 
     @TableColumn('TPGRAV')
     apiGravity: number = 0;

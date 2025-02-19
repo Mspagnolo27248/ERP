@@ -3,14 +3,14 @@ import { Entity } from "../../general/Entity";
 export class Product extends Entity {
     productId: string;
     productName: string;
-    companyNumber: string;
+    companyNumber: number;
     inactiveDate: number;
     TPPLGR: number;
-    productClass: number;
+    productClass: string;
     productGroup: string;
     toCompany: number;
     shortDescription: string;
-    priceClass: string;
+    priceClass: number;
     apiGravity: number;
     inventoryGroup: string;
     salesGL: number;
@@ -23,14 +23,14 @@ export class Product extends Entity {
     constructor({
         productId = '',
         productName = '',
-        companyNumber = '',
+        companyNumber = 0,
         inactiveDate = 0,
         TPPLGR = 0,
-        productClass = 0,
+        productClass = '',
         productGroup = '',
         toCompany = 0,
         shortDescription = '',
-        priceClass = '',
+        priceClass = 0,
         apiGravity = 0,
         inventoryGroup = '',
         salesGL = 0,
@@ -40,8 +40,8 @@ export class Product extends Entity {
         isFluid = ''
     }) {
         super();
-        if (typeof productId !== 'string' || typeof productName !== 'string' || typeof companyNumber !== 'string') {
-            this.throwDomainError('Invalid Types string type when instantiating product entity')
+        if (typeof productId !== 'string' || typeof productName !== 'string' ) {
+            this.throwDomainError(`Invalid Types string type when instantiating product entity for ${productId}`)
         }
         this.productId = productId;
         this.productName = productName;

@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { container } from "../../shared-common/dependency-injection/register-dependencies";
 import { withHttpErrorHandling } from "../utility/error-handler";
-import { ProductModel } from "../../shared-common/database/custom-orm/data-models/ProductModel";
 
 export class ProductsController {
 

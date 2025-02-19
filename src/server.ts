@@ -9,15 +9,23 @@ import { registerDependencies } from "./shared-common/dependency-injection/regis
 import { ConnectionManager } from "./shared-common/database/custom-orm/orm/ConnectionManager";
 import { MasterDataCacheImp } from "./shared-common/data-cache/MasterDataCacheImp";
 import path from "path";
-
-
+const swaggerOptions = {
+  explorer: true,
+  syntaxHighlight: false, // Disables syntax highlighting for better performance
+  responseInterceptor: (response:any) => {
+    if (response.body && Array.isArray(response.body) && response.body.length > 100) {
+      response.body = response.body.slice(0, 50); // Limit to 100 items to prevent freezing
+    }
+    return response;
+  }
+};
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 8001;
 app.use(cors());
 app.use('/api-docs', //http://localhost:8001/api-docs/
-  swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+  swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerOptions));
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   next();
@@ -50,7 +58,8 @@ async function getConnection() {
   { connectionString: 
 //'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;'
  //'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;'
- 'DSN=SQLODBC;UID=mstest;PWD=mstest;'
+ //'DSN=SQLODBC;UID=mstest;PWD=mstest;'
+ 'DSN=AS400;UID=ARGTEST;PWD=temp##1234;'
 }
 );
 }

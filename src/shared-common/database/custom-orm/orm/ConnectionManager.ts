@@ -208,9 +208,13 @@ class ODBCConnection implements DatabaseConnection {
       const result = await this.connection.query(query, params);
       return Array.isArray(result) ? result : result ? [result] : [];
     } catch (error: any) {
-      console.error('SQL Error:', error);
+    
       if (error.odbcErrors) {
-        console.error('ODBC Errors:', JSON.stringify(error.odbcErrors, null, 2));
+        const errorMessage = JSON.stringify(error.odbcErrors, null, 2);
+        error.message = errorMessage;
+        console.error('ODBC Errors:', errorMessage);
+      }else{
+        console.error(error)
       }
       throw error;
     }

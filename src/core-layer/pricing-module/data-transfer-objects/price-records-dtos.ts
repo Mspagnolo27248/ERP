@@ -45,14 +45,14 @@ unitMeasurement: string;
 export interface ProductDto {
     productId: string ;
     productName: string;
-    companyNumber: string;
+    companyNumber: number;
     inactiveDate: number;
     TPPLGR: number;
-    productClass: number ;
+    productClass: string ;
     productGroup: string ;
     toCompany: number ;
     shortDescription: string ;
-    priceClass: string ;
+    priceClass: number ;
     apiGravity: number ;
     inventoryGroup: string ;
     salesGL: number ;
