@@ -2,7 +2,7 @@ import { PricingRepository } from "../data-access-repository/PricingRepository";
 import { PriceAgreementKeys, RackPriceKeys } from "../data-transfer-objects/price-records-dtos";
 
 
-export class PriceRetrievalService {
+export class PriceRetrievalUseCase {
 
     constructor(private readonly pricingRepository: PricingRepository) {}
 

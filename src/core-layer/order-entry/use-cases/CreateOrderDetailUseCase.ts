@@ -1,5 +1,6 @@
 import { PricingRepository } from "../../pricing-module/data-access-repository/PricingRepository";
-import { PriceRetrievalService } from "../../pricing-module/domain-services/PriceRetrievalService";
+import { PriceRetrievalUseCase } from "../../pricing-module/use-cases/PriceRetrievalUseCase";
+
 import { OrderDetailDTO, OrderHeaderDTO } from "../data-access-repository/order-entry-dtos";
 import { OrderRepository } from "../data-access-repository/OrderEntryRepository";
 
@@ -20,9 +21,9 @@ constructor(private orderRepository: OrderRepository, private pricingRepository:
     
     
     async validatePrice(orderDetail: OrderDetailDTO, orderHeader: OrderHeaderDTO) {
-        const priceRetrievalService = new PriceRetrievalService(this.pricingRepository);
+        const priceRetrievalUseCase = new PriceRetrievalUseCase(this.pricingRepository);
 
-        const price = await priceRetrievalService.execute({
+        const price = await priceRetrievalUseCase.execute({
            productId: orderDetail.productID,
             containerId: orderDetail.containerID,
              unitOfMeasure: orderDetail.uom,

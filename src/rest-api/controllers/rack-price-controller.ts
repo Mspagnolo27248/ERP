@@ -20,18 +20,16 @@ import { withHttpErrorHandling } from "../utility/error-handler";
 
 
 
-
-
 export class RackPriceController {
+
 
   @withHttpErrorHandling()
   static async getAll(req: Request, res: Response){
     const filters = req.body;
-    const limit = parseInt(`${req.query.limit}`)||50;
+    const limit = parseInt(`${req.query.limit}`)||100;
     const usecase = container.resolve("GetRackPricingUseCase");    
       const rackPrices = await usecase.execute(filters,limit);
       return res.status(200).json(rackPrices);
-
 }
 
 @withHttpErrorHandling()
@@ -43,10 +41,6 @@ export class RackPriceController {
     }
 
 
-  
-
-  
- 
 
 //   static async upsert(req: Request, res: Response) {
 //     try {
