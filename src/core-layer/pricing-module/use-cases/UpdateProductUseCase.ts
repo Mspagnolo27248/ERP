@@ -10,7 +10,18 @@ export class UpdateProductUseCase extends UseCase {
     }
 
     async execute(product: ProductDto): Promise<ProductDto> {
-        return this.pricingRepository.updateProduct(product);
+
+        //Validate Product is length 4
+        if(!(product.productId.length==4))  this.throwApplicationError(new Error('Product Needs to be 4 Chars'))
+        
+        //Existence Check Product Class
+        const classTable = await this.pricingRepository.getAllProductClasses();
+        const classList = classTable.map(record=>record.productClass)
+        if(!(classList.includes(product.productClass)))  this.throwApplicationError(new Error('Class Does not exists'))
+        
+        //Validation and Business Rules Satisfied Complete Insert or Udpate
+        const updatedProduct =  this.pricingRepository.updateProduct(product);
+        return updatedProduct
     }
     
 }

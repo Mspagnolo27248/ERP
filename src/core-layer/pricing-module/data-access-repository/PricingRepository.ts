@@ -1,4 +1,4 @@
-import {PriceAgreementDto, PriceAgreementKeys, ProductDto, RackPriceDto, RackPriceKeys } from "../data-transfer-objects/price-records-dtos";
+import {PriceAgreementDto, PriceAgreementKeys, ProductClassDto, ProductDto, RackPriceDto, RackPriceKeys } from "../data-transfer-objects/price-records-dtos";
 
 
 /*
@@ -22,5 +22,6 @@ export interface PricingRepository {
     deleteProduct(productId: string): Promise<any>;
     getPriceAgreementByKey(price:PriceAgreementKeys): Promise<PriceAgreementDto>;
     getAllPriceAgreements(where?:Partial<PriceAgreementDto>): Promise<PriceAgreementDto[]>;
+    getAllProductClasses():Promise<ProductClassDto[]>
 }
 
