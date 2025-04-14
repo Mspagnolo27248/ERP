@@ -181,7 +181,7 @@ const options = {
                     }
                 }
             },
-            '/api/ocr-invoice/validate': {
+            '/api/ap-voucher/ocr-invoice/validate': {
                 post: {
                     tags: ['Accounts Payable'],
                     summary: 'Validate OCR Invoice',
@@ -220,7 +220,7 @@ const options = {
                     }
                 }
             },
-            '/api/ocr-invoice': {
+            '/api/ap-voucher/ocr-invoice': {
                 post: {
                     tags: ['Accounts Payable'],
                     summary: 'Submit OCR Invoice',
