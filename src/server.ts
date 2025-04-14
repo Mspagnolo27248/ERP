@@ -56,10 +56,10 @@ async function getConnection() {
   // await ConnectionManager.getInstance().configureConnection('sqlite', {database: path.join('./', 'database.sqlite')});
  await ConnectionManager.getInstance().configureConnection('odbc',
   { connectionString: 
-//'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;'
+'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;Trusted_Connection=yes;TrustServerCertificate=yes;'
  //'Driver={SQL Server Native Client 11.0};Server=(local);Database=ibox;UID=mstest;PWD=mstest;'
  //'DSN=SQLODBC;UID=mstest;PWD=mstest;'
- 'DSN=AS400;UID=ARGTEST;PWD=temp##1234;'
+ //'DSN=AS400;UID=ARGTEST;PWD=temp##1234;'
 }
 );
 }

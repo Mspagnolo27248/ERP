@@ -1,7 +1,7 @@
 
 
 
-class VoucherRulesValidator {
+export class VoucherRulesValidator {
     private readonly errors: string[] = [];
 
     constructor(

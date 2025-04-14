@@ -1,8 +1,9 @@
+import { VoucherRulesValidator } from "./VoucherRulesValidator";
 
 
 
 
-class OCRVoucherValidator {
+export class OCRVoucherValidator {
     private readonly voucherRepository: APVoucherRepository;
     private readonly voucherRulesValidator: VoucherRulesValidator;
     private readonly errors: string[] = [];

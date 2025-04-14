@@ -1,4 +1,4 @@
-class APVoucherRepositoryImp implements APVoucherRepository {
+export class APVoucherRepositoryImp implements APVoucherRepository {
 
 
     async findVocherByVendorId(vendorId: string): Promise<APVoucherDTO[] | null> {

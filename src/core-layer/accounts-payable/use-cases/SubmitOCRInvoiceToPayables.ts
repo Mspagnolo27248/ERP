@@ -1,7 +1,8 @@
+import { ValidateOCRInvoices } from "./ValidateOCRInvoices";
 
 
 
-class SubmitOCRInvoiceToPayables {
+export class SubmitOCRInvoiceToPayables {
 
     constructor(
         private readonly validateOCRInvoices: ValidateOCRInvoices,

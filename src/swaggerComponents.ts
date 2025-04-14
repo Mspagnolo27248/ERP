@@ -229,6 +229,75 @@ export const swaggerComponents = {
           },
         },
       },
+      APVoucherDTO: {
+        type: "object",
+        properties: {
+          vendorId: {
+            type: "string",
+            example: "VEND001"
+          },
+          voucherNumber: {
+            type: "string",
+            example: "VOUCH2024001"
+          },
+          amount: {
+            type: "number",
+            format: "float",
+            example: 1000.50
+          },
+          dueDate: {
+            type: "string",
+            format: "date",
+            example: "2024-03-15"
+          },
+          lineItems: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/APVoucherLineItemDTO"
+            }
+          }
+        },
+        required: ["vendorId", "voucherNumber", "amount", "dueDate", "lineItems"]
+      },
+      APVoucherLineItemDTO: {
+        type: "object",
+        properties: {
+          lineItemNumber: {
+            type: "integer",
+            example: 1
+          },
+          amount: {
+            type: "number",
+            format: "float",
+            example: 500.25
+          },
+          description: {
+            type: "string",
+            example: "Office supplies for Q1 2024"
+          }
+        },
+        required: ["lineItemNumber", "amount", "description"]
+      },
+      VoucherValidationResponseDTO: {
+        type: "object",
+        properties: {
+          isValid: {
+            type: "boolean",
+            example: true
+          },
+          voucher: {
+            $ref: "#/components/schemas/APVoucherDTO"
+          },
+          errors: {
+            type: "array",
+            items: {
+              type: "string"
+            },
+            example: ["Invalid vendor ID", "Amount exceeds limit"]
+          }
+        },
+        required: ["isValid", "voucher", "errors"]
+      }
     },
   },
 };

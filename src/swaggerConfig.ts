@@ -24,6 +24,10 @@ const options = {
             {
                 name: 'Rack Prices',
                 description: 'Rack price management endpoints'
+            },
+            {
+                name: 'Accounts Payable',
+                description: 'Accounts Payable management endpoints'
             }
         ],
         paths: {
@@ -170,6 +174,84 @@ const options = {
                                 'application/json': {
                                     schema: {
                                         $ref: '#/components/schemas/RackPriceDto'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '/api/ocr-invoice/validate': {
+                post: {
+                    tags: ['Accounts Payable'],
+                    summary: 'Validate OCR Invoice',
+                    description: 'Validates an OCR processed invoice for accounts payable',
+                    requestBody: {
+                        required: true,
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/APVoucherDTO'
+                                }
+                            }
+                        }
+                    },
+                    responses: {
+                        '200': {
+                            description: 'Invoice is valid',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/VoucherValidationResponseDTO'
+                                    }
+                                }
+                            }
+                        },
+                        '400': {
+                            description: 'Invoice validation failed',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/VoucherValidationResponseDTO'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '/api/ocr-invoice': {
+                post: {
+                    tags: ['Accounts Payable'],
+                    summary: 'Submit OCR Invoice',
+                    description: 'Submits a validated OCR invoice to accounts payable',
+                    requestBody: {
+                        required: true,
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/APVoucherDTO'
+                                }
+                            }
+                        }
+                    },
+                    responses: {
+                        '200': {
+                            description: 'Invoice submitted successfully',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/VoucherValidationResponseDTO'
+                                    }
+                                }
+                            }
+                        },
+                        '400': {
+                            description: 'Invoice submission failed',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/VoucherValidationResponseDTO'
                                     }
                                 }
                             }

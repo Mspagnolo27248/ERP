@@ -1,6 +1,7 @@
 import { Router } from "express";
 import rackPriceRoutes from "./routes/rack-price.routes";
 import productsRoutes from "./routes/products-routes";
+import apVoucherRoutes from "./routes/ap-voucher";
 
 // **** ROUTER.TS lists Resource endpoints root paths and the files that specify the http verb paths.***
 /*
@@ -17,6 +18,7 @@ const router = Router();
 /*This should be a list of Resources*/
 router.use('/rack-prices',rackPriceRoutes);
 router.use('/products',productsRoutes);
+router.use('/ap-voucher',apVoucherRoutes);
 //router.use('/special-price',specialPriceRoutes);
 // router.use('/orders',ordersRoutes);
 // router.use('/special-price',specialPriceRoutes);

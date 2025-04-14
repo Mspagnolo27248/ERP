@@ -1,8 +1,9 @@
+import { OCRVoucherValidator } from "../app-layer-services/OCRVoucherValidator";
 
 
 
 
-class ValidateOCRInvoices {
+export class ValidateOCRInvoices {
 
     constructor(
         private readonly ocrVoucherValidator: OCRVoucherValidator,
