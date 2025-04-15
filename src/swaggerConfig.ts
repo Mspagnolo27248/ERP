@@ -181,11 +181,11 @@ const options = {
                     }
                 }
             },
-            '/api/ap-voucher/ocr-invoice/validate': {
+            '/api/ap-voucher': {
                 post: {
                     tags: ['Accounts Payable'],
-                    summary: 'Validate OCR Invoice',
-                    description: 'Validates an OCR processed invoice for accounts payable',
+                    summary: 'Submit AP Voucher',
+                    description: 'Submits an accounts payable voucher',
                     requestBody: {
                         required: true,
                         content: {
@@ -198,7 +198,7 @@ const options = {
                     },
                     responses: {
                         '200': {
-                            description: 'Invoice is valid',
+                            description: 'Voucher submitted successfully',
                             content: {
                                 'application/json': {
                                     schema: {
@@ -208,7 +208,7 @@ const options = {
                             }
                         },
                         '400': {
-                            description: 'Invoice validation failed',
+                            description: 'Voucher submission failed',
                             content: {
                                 'application/json': {
                                     schema: {
@@ -220,11 +220,11 @@ const options = {
                     }
                 }
             },
-            '/api/ap-voucher/ocr-invoice': {
+            '/api/ap-voucher/validate': {
                 post: {
                     tags: ['Accounts Payable'],
-                    summary: 'Submit OCR Invoice',
-                    description: 'Submits a validated OCR invoice to accounts payable',
+                    summary: 'Validate AP Voucher',
+                    description: 'Validates an accounts payable voucher',
                     requestBody: {
                         required: true,
                         content: {
@@ -237,7 +237,7 @@ const options = {
                     },
                     responses: {
                         '200': {
-                            description: 'Invoice submitted successfully',
+                            description: 'Voucher is valid',
                             content: {
                                 'application/json': {
                                     schema: {
@@ -247,7 +247,85 @@ const options = {
                             }
                         },
                         '400': {
-                            description: 'Invoice submission failed',
+                            description: 'Voucher validation failed',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/VoucherValidationResponseDTO'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '/api/ap-voucher/flexi-invoice/validate': {
+                post: {
+                    tags: ['Accounts Payable'],
+                    summary: 'Validate Flexi Invoice',
+                    description: 'Validates a flexi invoice for accounts payable',
+                    requestBody: {
+                        required: true,
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/APVoucherDTO'
+                                }
+                            }
+                        }
+                    },
+                    responses: {
+                        '200': {
+                            description: 'Flexi invoice is valid',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/VoucherValidationResponseDTO'
+                                    }
+                                }
+                            }
+                        },
+                        '400': {
+                            description: 'Flexi invoice validation failed',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/VoucherValidationResponseDTO'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '/api/ap-voucher/flexi-invoice/submit': {
+                post: {
+                    tags: ['Accounts Payable'],
+                    summary: 'Submit Flexi Invoice',
+                    description: 'Submits a validated flexi invoice to accounts payable',
+                    requestBody: {
+                        required: true,
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    $ref: '#/components/schemas/APVoucherDTO'
+                                }
+                            }
+                        }
+                    },
+                    responses: {
+                        '200': {
+                            description: 'Flexi invoice submitted successfully',
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: '#/components/schemas/VoucherValidationResponseDTO'
+                                    }
+                                }
+                            }
+                        },
+                        '400': {
+                            description: 'Flexi invoice submission failed',
                             content: {
                                 'application/json': {
                                     schema: {
@@ -261,7 +339,85 @@ const options = {
             }
         },
         components: {
-            schemas: swaggerComponents.components.schemas
+            schemas: {
+                APVoucherDTO: {
+                    type: 'object',
+                    required: ['vendorId', 'voucherNumber', 'amount', 'dueDate', 'lineItems'],
+                    properties: {
+                        vendorId: {
+                            type: 'string',
+                            description: 'The ID of the vendor'
+                        },
+                        voucherNumber: {
+                            type: 'string',
+                            description: 'The unique identifier for the voucher'
+                        },
+                        amount: {
+                            type: 'number',
+                            description: 'The total amount of the voucher'
+                        },
+                        dueDate: {
+                            type: 'string',
+                            format: 'date',
+                            description: 'The due date for payment'
+                        },
+                        lineItems: {
+                            type: 'array',
+                            items: {
+                                $ref: '#/components/schemas/APVoucherLineItemDTO'
+                            },
+                            description: 'List of line items in the voucher'
+                        },
+                        discountAmt: {
+                            type: 'number',
+                            description: 'The discount amount applied to the voucher'
+                        },
+                        discountPercent: {
+                            type: 'number',
+                            description: 'The discount percentage applied to the voucher'
+                        }
+                    }
+                },
+                APVoucherLineItemDTO: {
+                    type: 'object',
+                    required: ['lineItemNumber', 'amount', 'description'],
+                    properties: {
+                        lineItemNumber: {
+                            type: 'number',
+                            description: 'The sequential number of the line item'
+                        },
+                        amount: {
+                            type: 'number',
+                            description: 'The amount for this line item'
+                        },
+                        description: {
+                            type: 'string',
+                            description: 'Description of the line item'
+                        }
+                    }
+                },
+                VoucherValidationResponseDTO: {
+                    type: 'object',
+                    required: ['isValid', 'voucher', 'errors'],
+                    properties: {
+                        isValid: {
+                            type: 'boolean',
+                            description: 'Indicates whether the voucher is valid'
+                        },
+                        voucher: {
+                            $ref: '#/components/schemas/APVoucherDTO',
+                            description: 'The validated voucher'
+                        },
+                        errors: {
+                            type: 'array',
+                            items: {
+                                type: 'string'
+                            },
+                            description: 'List of validation errors if any'
+                        }
+                    }
+                }
+            }
         }
     },
     apis: [path.join(__dirname, './rest-api/controllers/*.ts')],
