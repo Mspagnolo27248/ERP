@@ -2,21 +2,45 @@
 
 
 import { NextFunction, Request, Response } from "express";
-import { SubmitOCRInvoiceToPayables } from "../../core-layer/accounts-payable/use-cases/SubmitOCRInvoiceToPayables";
-import { ValidateOCRInvoices } from "../../core-layer/accounts-payable/use-cases/ValidateOCRInvoices";
+import { ValidateOCRInvoices } from "../../core-layer/accounts-payable/use-cases/ValidateFlexiInvoiceUsecase";
 import { APVoucherRepositoryImp } from "../../core-layer/accounts-payable/data-access-repository/APVoucherRepositoryImp";
 import { OCRVoucherValidator } from "../../core-layer/accounts-payable/app-layer-services/OCRVoucherValidator";
-
+import { SubmitFlexiInvoiceUsecase } from "../../core-layer/accounts-payable/use-cases/SubmitFlexiInvoiceUsecase";
+import { ValidateAPVoucherUsecase } from "../../core-layer/accounts-payable/use-cases/ValidateAPVoucherUsecase";
+import { SubmitAPVoucherUsecase } from "../../core-layer/accounts-payable/use-cases/SubmitAPVoucherUsecase";
 
 const voucherRepository = new APVoucherRepositoryImp();
 const ocrValidator = new OCRVoucherValidator(voucherRepository);
-const validateOCRInvoices = new ValidateOCRInvoices(ocrValidator, voucherRepository);
-const submitOCRInvoiceToPayables = new SubmitOCRInvoiceToPayables(validateOCRInvoices, voucherRepository);
+const validateFlexiInvoice = new ValidateOCRInvoices(ocrValidator, voucherRepository);
+const submitFlexiInvoiceUsecase = new SubmitFlexiInvoiceUsecase(validateFlexiInvoice, voucherRepository);
 
 export class APVoucherController {
 
-    static async validateOCRInvoice(req: Request, res: Response, next: NextFunction) {
-        const   voucher = await validateOCRInvoices.execute(req.body);
+    static async validateAPVoucher(req: Request, res: Response, next: NextFunction) {
+        const voucher = req.body;
+        const validateAPVoucherUsecase = new ValidateAPVoucherUsecase();//TODO: inject repository
+        const response = await validateAPVoucherUsecase.execute(voucher);
+        if(response.isValid) {
+            return res.status(200).json(response);
+        } else {
+            return res.status(400).json(response);
+        }
+    }
+
+    static async submitAPVoucher(req: Request, res: Response, next: NextFunction) {
+        const voucher = req.body;
+        const submitAPVoucherUsecase = new SubmitAPVoucherUsecase();//TODO: inject repository
+        const response = await submitAPVoucherUsecase.execute(voucher);
+        if(response.isValid) {
+            return res.status(200).json(response);
+        } else {
+            return res.status(400).json(response);
+        }
+    }
+
+
+    static async validateFlexiInvoice(req: Request, res: Response, next: NextFunction) {
+        const   voucher = await validateFlexiInvoice.execute(req.body);
         if(voucher.isValid) {
             return res.status(200).json(voucher);
         } else {
@@ -24,8 +48,8 @@ export class APVoucherController {
         }
     }
 
-    static async submitOCRInvoice(req: Request, res: Response, next: NextFunction) {
-        const   voucher = await submitOCRInvoiceToPayables.execute(req.body);
+    static async submitFlexiInvoice(req: Request, res: Response, next: NextFunction) {
+        const   voucher = await submitFlexiInvoiceUsecase.execute(req.body);
         if(voucher.isValid) {
             return res.status(200).json(voucher);
         } else {

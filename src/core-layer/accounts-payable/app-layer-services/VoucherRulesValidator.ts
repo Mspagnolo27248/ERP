@@ -1,3 +1,5 @@
+import { APVoucherRepository } from "../data-access-repository/APVoucherRepository";
+import { APVoucher } from "../domain-entities/APVoucher";
 
 
 
@@ -8,14 +10,13 @@ export class VoucherRulesValidator {
         private readonly voucherRepository: APVoucherRepository
     ) {}
 
-
-    async validateVoucher(voucher: APVoucherDTO): Promise<string[]> {
+    async validateVoucher(voucher: APVoucher): Promise<string[]> {
 
         this.validateVoucherHasNotBeenPaid(voucher);
         return this.errors;
     }
 
-    private validateVoucherHasNotBeenPaid (voucher: APVoucherDTO): void {
+    private validateVoucherHasNotBeenPaid (voucher: APVoucher): void {
         if(voucher.amount <= 0) {
             this.errors.push('Voucher amount must be greater than 0');
         }

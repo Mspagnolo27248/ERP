@@ -1,3 +1,5 @@
+import { APVoucherRepository } from "../data-access-repository/APVoucherRepository";
+import { APVoucher } from "../domain-entities/APVoucher";
 import { VoucherRulesValidator } from "./VoucherRulesValidator";
 
 
@@ -14,18 +16,18 @@ export class OCRVoucherValidator {
         this.voucherRulesValidator = new VoucherRulesValidator(this.voucherRepository);
     }   
 
-    async validateVoucher(voucher: APVoucherDTO): Promise<string[]> {
+    async validateVoucher(voucher: APVoucher): Promise<string[]> {
         const errors = await this.voucherRulesValidator.validateVoucher(voucher);
         await this.validateOcrRules(voucher);
         return errors;
     }
 
-    async validateOcrRules(voucher: APVoucherDTO): Promise<string[]> {      
+    async validateOcrRules(voucher: APVoucher): Promise<string[]> {      
         this.validateOCRQuantityFields(voucher);
         return this.errors;
     }
 
-    private validateOCRQuantityFields(voucher: APVoucherDTO): void {
+    private validateOCRQuantityFields(voucher: APVoucher): void {
         if(voucher.lineItems.length < 999999) {
             this.errors.push('Quantity must be greater than 0') ;
         }

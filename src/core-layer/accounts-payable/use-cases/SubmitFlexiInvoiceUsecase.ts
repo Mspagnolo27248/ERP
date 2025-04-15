@@ -1,8 +1,9 @@
-import { ValidateOCRInvoices } from "./ValidateOCRInvoices";
+import { APVoucherRepository } from "../data-access-repository/APVoucherRepository";
+import { ValidateOCRInvoices } from "./ValidateFlexiInvoiceUsecase";
 
 
 
-export class SubmitOCRInvoiceToPayables {
+export class SubmitFlexiInvoiceUsecase {
 
     constructor(
         private readonly validateOCRInvoices: ValidateOCRInvoices,

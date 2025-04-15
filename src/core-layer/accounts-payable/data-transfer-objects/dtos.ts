@@ -4,6 +4,8 @@ interface APVoucherDTO {
     amount: number;
     dueDate: Date;
     lineItems:  APVoucherLineItemDTO[];
+    discountAmt: number;
+    discountPercent: number;
 }
 
 interface APVoucherLineItemDTO {

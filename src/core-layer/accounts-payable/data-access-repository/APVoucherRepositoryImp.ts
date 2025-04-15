@@ -1,7 +1,11 @@
+import { APVoucherRepository } from "./APVoucherRepository";
+
+
+
 export class APVoucherRepositoryImp implements APVoucherRepository {
 
 
-    async findVocherByVendorId(vendorId: string): Promise<APVoucherDTO[] | null> {
+    async findVoucherByVendorId(vendorId: string): Promise<APVoucherDTO[] | null> {
         const vouchers = mockVouchers.filter(voucher => voucher.vendorId === vendorId);
         return vouchers.length > 0 ? vouchers : null;
     }       
@@ -21,23 +25,24 @@ export class APVoucherRepositoryImp implements APVoucherRepository {
     }   
     
 
-
-
 }
 
 
 const mockVouchers: APVoucherDTO[] = [
-    {
+    {   
         vendorId: '123',
         voucherNumber: '123',
         amount: 100,
         dueDate: new Date('2021-01-01'),
+        discountAmt: 0,
+        discountPercent: 0,
         lineItems: [
             {
                 lineItemNumber: 1,
                 amount: 100,
                 description: 'Test'
             }
-        ]
+        ],
+    
     }
 ]

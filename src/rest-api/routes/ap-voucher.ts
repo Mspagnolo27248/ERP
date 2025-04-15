@@ -4,7 +4,9 @@ import { APVoucherController } from "../controllers/ap-voucher.controller";
 
 
 const apVoucherRoutes = Router();   
-apVoucherRoutes.post('/ocr-invoice/validate', APVoucherController.validateOCRInvoice);
-apVoucherRoutes.post('/ocr-invoice', APVoucherController.submitOCRInvoice);
+apVoucherRoutes.post('/', APVoucherController.submitAPVoucher);
+apVoucherRoutes.post('/validate', APVoucherController.validateAPVoucher);
+apVoucherRoutes.post('/flexi-invoice/validate', APVoucherController.validateFlexiInvoice);
+apVoucherRoutes.post('/flexi-invoice/submit', APVoucherController.submitFlexiInvoice);
 
 export default apVoucherRoutes;
