@@ -250,6 +250,16 @@ export const swaggerComponents = {
             format: "date",
             example: "2024-03-15"
           },
+          discountAmt: {
+            type: "number",
+            format: "float",
+            example: "0.0"
+          },
+          discountPercent: {
+            type: "number",
+            format: "float",
+            example: "0.0"
+          },
           lineItems: {
             type: "array",
             items: {
