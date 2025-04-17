@@ -1,27 +1,39 @@
 import { APVoucherRepository } from "../data-access-repository/APVoucherRepository";
+import { VoucherValidationResponseDTO } from "../data-transfer-objects/dtos";
 import { APVoucher } from "../domain-entities/APVoucher";
 
-
-
 export class VoucherRulesValidator {
-    private readonly errors: string[] = [];
+  constructor(private readonly voucherRepository: APVoucherRepository) {}
 
-    constructor(
-        private readonly voucherRepository: APVoucherRepository
-    ) {}
+  async validateVoucher(voucher: APVoucher): Promise<VoucherValidationResponseDTO> {
+    const errors: validationErrors = {};
+    await this.validateVoucherNotDuplicate(voucher, errors);
+    await this.validateVendorExists(voucher, errors);
+    return {
+      isValid: Object.keys(errors).length === 0,
+      voucher: { ...voucher },
+      errors: errors,
+    };
+  }
 
-    async validateVoucher(voucher: APVoucher): Promise<string[]> {
-
-        this.validateVoucherHasNotBeenPaid(voucher);
-        return this.errors;
+  private async validateVoucherNotDuplicate(voucher: APVoucher,errors: validationErrors): Promise<void> {
+    if (voucher.voucherNumber) {
+      const existing = await this.voucherRepository.findVoucherByVoucherNumber(voucher.voucherNumber);
+      if (existing) {
+        errors["voucherNumber"] = "Voucher number already exists";
+      }
     }
+  }
 
-    private validateVoucherHasNotBeenPaid (voucher: APVoucher): void {
-        if(voucher.amount <= 0) {
-            this.errors.push('Voucher amount must be greater than 0');
-        }
+  private async validateVendorExists(voucher: APVoucher,errors: validationErrors): Promise<void> {
+    const vendor = await this.voucherRepository.findVendorById(voucher.vendorId);
+    if (!vendor) {
+      errors["vendorId"] = "Vendor does not exist";
     }
-    
-    
+  }
 }
 
+
+interface validationErrors {
+  [key: string]: string;
+}

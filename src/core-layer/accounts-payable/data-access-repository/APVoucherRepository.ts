@@ -8,5 +8,6 @@ export interface APVoucherRepository {
         findVoucherByVoucherNumber(voucherNumber: string): Promise<APVoucherDTO|null>;
         submitVoucher(voucher: APVoucherDTO): Promise<APVoucherDTO>;
         findAllVouchers(): Promise<APVoucherDTO[]>;
+        findVendorById(vendorId: string): Promise<any>; //TODO: change to vendor entity
 
 }

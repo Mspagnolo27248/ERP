@@ -2,7 +2,7 @@ import { VoucherRulesValidator } from "../app-layer-services/VoucherRulesValidat
 import { APVoucherRepository } from "../data-access-repository/APVoucherRepository";
 import { APVoucherRepositoryImp } from "../data-access-repository/APVoucherRepositoryImp";
 import { APVoucher } from "../domain-entities/APVoucher";
-
+import { APVoucherDTO, VoucherValidationResponseDTO } from "../data-transfer-objects/dtos";
 
 export class ValidateAPVoucherUsecase {
     private readonly voucherValidator: VoucherRulesValidator
@@ -13,16 +13,16 @@ export class ValidateAPVoucherUsecase {
                 this.voucherValidator = new VoucherRulesValidator(this.voucherRepository);  /*TODO: inject validator*/
     }
 
-    async execute(voucher: APVoucherDTO): Promise<VoucherValidationResponseDTO> {
-        const voucherEntity = new APVoucher(voucher);
-        const voucherValidationErrors = await this.voucherValidator.validateVoucher(voucherEntity); 
-        const isValid = voucherValidationErrors.length === 0;
-        const voucherValidationResponseDTO: VoucherValidationResponseDTO = {
-            isValid: isValid,
-            voucher: voucher,
-            errors: voucherValidationErrors
-      }
-      return voucherValidationResponseDTO;
+    async execute(voucherDTO: APVoucherDTO): Promise<VoucherValidationResponseDTO> {
+        try {
+            const voucherEntity = new APVoucher(voucherDTO);
+            return await this.voucherValidator.validateVoucher(voucherEntity);
+        } catch (error: unknown) {
+            return {
+                isValid: false,
+                voucher: voucherDTO,
+                errors: error instanceof Error ?{[error.name]: error.message} : {voucherNumber: 'Unknown error'}
+            };
+        }
     }
-
 }   

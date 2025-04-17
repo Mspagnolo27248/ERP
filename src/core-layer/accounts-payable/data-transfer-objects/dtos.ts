@@ -1,6 +1,6 @@
-interface APVoucherDTO {
+export interface APVoucherDTO {
     vendorId: string;
-    voucherNumber: string;
+    voucherNumber?: string;
     amount: number;
     dueDate: Date;
     lineItems:  APVoucherLineItemDTO[];
@@ -8,30 +8,28 @@ interface APVoucherDTO {
     discountPercent: number;
 }
 
-interface APVoucherLineItemDTO {
+export interface APVoucherLineItemDTO {
     lineItemNumber: number;
     amount: number;
     description: string;
 }
 
-interface OCRVoucherHeaderDTO {
+export interface OCRVoucherHeaderDTO {
     vendorId: string;
     voucherNumber: string;
     amount: number;
     dueDate: Date;
 }
 
-interface OCRVoucherLineItemDTO {
-
+export interface OCRVoucherLineItemDTO {
     lineItemNumber: number;
     amount: number;
     description: string;
-
 }
 
 
-interface VoucherValidationResponseDTO {
+export interface VoucherValidationResponseDTO {
     isValid: boolean;
     voucher: APVoucherDTO;
-    errors: string[];
+    errors: Record<string, string>;
 }

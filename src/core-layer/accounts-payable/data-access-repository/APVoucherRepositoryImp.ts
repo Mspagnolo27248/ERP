@@ -24,6 +24,9 @@ export class APVoucherRepositoryImp implements APVoucherRepository {
         return mockVouchers;
     }   
     
+    async findVendorById(vendorId: string): Promise<any> {
+        return mockVendors.find(vendor => vendor.id === vendorId);
+    }
 
 }
 
@@ -44,5 +47,13 @@ const mockVouchers: APVoucherDTO[] = [
             }
         ],
     
+    }
+]
+
+const mockVendors: any[] = [
+    {
+        id: '123',
+        name: 'Test',
+        paymentTerms: 'Due on receipt'
     }
 ]

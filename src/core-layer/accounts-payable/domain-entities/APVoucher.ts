@@ -30,21 +30,21 @@ export class APVoucher {
     validateDetailSumToHeader() {
         const totalDetailAmount = this.lineItems.reduce((acc, item) => acc + item.amount, 0);
         if (totalDetailAmount !== this.amount) {
-            throw new Error('Detail sum to header mismatch');
+            throwDomainValidationException('amount', 'Detail sum to header mismatch');
         }
     }
 
     validateDiscount() {
         if(this.discountAmt && this.discountPercent){
-            throw new Error('Discount amount and discount percent cannot both be provided');
+            throwDomainValidationException('discountAmt', 'Discount amount and discount percent cannot both be provided');
         }
      
         if (this.discountAmt > this.amount) {
-            throw new Error('Discount amount is greater than the total amount');
+            throwDomainValidationException('discountAmt', 'Discount amount is greater than the total amount');
         }
 
         if(this.discountPercent && this.discountPercent > 100){
-            throw new Error('Discount percent is greater than 100');
+            throwDomainValidationException('discountPercent', 'Discount percent is greater than 100');
         }
     }
 }
@@ -67,4 +67,10 @@ interface APVoucherProps {
     discountAmt: number;
     discountPercent: number;
     voucherNumber?: string;
+}
+
+function throwDomainValidationException(property: string, message: string) {
+    const error = new Error(message);   
+    error.name = property   ;
+    throw error;
 }
